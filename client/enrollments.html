@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Enrollments — PTM System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">`n  <script src="js/config.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -134,7 +134,7 @@
     function hideAddForm() { document.getElementById('add-form').classList.add('d-none'); }
     async function loadDropdowns() {
       const headers={'Authorization':'Bearer '+token};
-      const [er,pr]=await Promise.all([fetch('/api/employees',{headers}),fetch('/api/programs',{headers})]);
+      const [er,pr]=await Promise.all([fetch(API_BASE + '/api/employees',{headers}),fetch(API_BASE + '/api/programs',{headers})]);
       const emps=await er.json(), progs=await pr.json();
       const es=document.getElementById('employee'); es.innerHTML='<option value="">-- Choose Employee --</option>';
       emps.forEach(e=>es.innerHTML+=`<option value="${e._id}">${e.name} — ${e.department}</option>`);
@@ -142,7 +142,7 @@
       progs.forEach(p=>ps.innerHTML+=`<option value="${p._id}">${p.title}</option>`);
     }
     async function loadEnrollments() {
-      const res=await fetch('/api/enrollments',{headers:{'Authorization':'Bearer '+token}});
+      const res=await fetch(API_BASE + '/api/enrollments',{headers:{'Authorization':'Bearer '+token}});
       const data=await res.json();
       const tbody=document.getElementById('enrollment-table');
       if(!data.length){tbody.innerHTML='<tr><td colspan="7"><div class="empty-state">No enrollments found</div></td></tr>';return;}
@@ -170,19 +170,19 @@
       const employee=document.getElementById('employee').value, program=document.getElementById('program').value;
       const formMsg=document.getElementById('form-msg');
       if(!employee||!program){formMsg.innerHTML='<span class="msg-error">Select both employee and program.</span>';return;}
-      const res=await fetch('/api/enrollments',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({employee,program})});
+      const res=await fetch(API_BASE + '/api/enrollments',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({employee,program})});
       const data=await res.json();
       if(!res.ok){formMsg.innerHTML=`<span class="msg-error">${data.message}</span>`;return;}
       formMsg.innerHTML='<span class="msg-success">Program assigned successfully!</span>';
       setTimeout(()=>{hideAddForm();loadEnrollments();},800);
     }
     async function updateStatus(id,status,progress) {
-      await fetch('/api/enrollments/'+id,{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({status,progress:Number(progress)})});
+      await fetch(API_BASE + '/api/enrollments/'+id,{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({status,progress:Number(progress)})});
       loadEnrollments();
     }
     async function deleteEnrollment(id) {
       if(!confirm('Remove this enrollment?'))return;
-      await fetch('/api/enrollments/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
+      await fetch(API_BASE + '/api/enrollments/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
       loadEnrollments();
     }
     loadEnrollments();

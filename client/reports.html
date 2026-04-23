@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Reports — PTM System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">`n  <script src="js/config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
@@ -576,7 +576,7 @@
     document.getElementById('user-role').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
     function logout() { localStorage.removeItem('user'); localStorage.removeItem('token'); window.location.href = 'index.html'; }
     async function loadReports() {
-      const res = await fetch('/api/reports', { headers: { 'Authorization': 'Bearer ' + token } });
+      const res = await fetch(API_BASE + '/api/reports', { headers: { 'Authorization': 'Bearer ' + token } });
       const data = await res.json();
       document.getElementById('total-employees').textContent = data.totalEmployees;
       document.getElementById('total-programs').textContent = data.totalPrograms;
@@ -617,7 +617,7 @@
 
       // Load Recent Feedback from MongoDB
       if (data.feedback && data.feedback.totalFeedback > 0) {
-        const fRes = await fetch('/api/feedback', { headers: { 'Authorization': 'Bearer ' + token } });
+        const fRes = await fetch(API_BASE + '/api/feedback', { headers: { 'Authorization': 'Bearer ' + token } });
         const feedbacks = await fRes.json();
         const list = document.getElementById('feedback-preview-list');
         list.innerHTML = feedbacks.slice(0, 5).map(f => `

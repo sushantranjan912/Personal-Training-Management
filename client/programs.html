@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Training Programs — PTM System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">`n  <script src="js/config.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -179,14 +179,14 @@
         </tr>`).join('');
     }
     function searchPrograms(){const q=document.getElementById('search').value.toLowerCase();renderTable(allPrograms.filter(p=>p.title.toLowerCase().includes(q)||p.trainer.toLowerCase().includes(q)));}
-    async function loadPrograms(){const res=await fetch('/api/programs',{headers:{'Authorization':'Bearer '+token}});allPrograms=await res.json();renderTable(allPrograms);}
+    async function loadPrograms(){const res=await fetch(API_BASE + '/api/programs',{headers:{'Authorization':'Bearer '+token}});allPrograms=await res.json();renderTable(allPrograms);}
     async function addProgram(){
       const title=document.getElementById('prog-title').value.trim(),trainer=document.getElementById('prog-trainer').value.trim();
       const description=document.getElementById('prog-description').value.trim(),duration=document.getElementById('prog-duration').value.trim();
       const type=document.getElementById('prog-type').value,startDate=document.getElementById('prog-startDate').value,endDate=document.getElementById('prog-endDate').value;
       const formMsg=document.getElementById('form-msg');
       if(!title||!trainer||!description||!duration||!startDate||!endDate){formMsg.innerHTML='<span class="msg-error">All fields required.</span>';return;}
-      const res=await fetch('/api/programs',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({title,trainer,description,duration,type,startDate,endDate})});
+      const res=await fetch(API_BASE + '/api/programs',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({title,trainer,description,duration,type,startDate,endDate})});
       const data=await res.json();
       if(!res.ok){formMsg.innerHTML=`<span class="msg-error">${data.message}</span>`;return;}
       formMsg.innerHTML='<span class="msg-success">Program added.</span>';
@@ -209,7 +209,7 @@
       const type=document.getElementById('prog-type').value,startDate=document.getElementById('prog-startDate').value,endDate=document.getElementById('prog-endDate').value;
       const formMsg=document.getElementById('form-msg');
       if(!title||!trainer||!description||!duration||!startDate||!endDate){formMsg.innerHTML='<span class="msg-error">All fields required.</span>';return;}
-      const res=await fetch('/api/programs/'+id,{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({title,trainer,description,duration,type,startDate,endDate})});
+      const res=await fetch(API_BASE + '/api/programs/'+id,{method:'PUT',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({title,trainer,description,duration,type,startDate,endDate})});
       const data=await res.json();
       if(!res.ok){formMsg.innerHTML=`<span class="msg-error">${data.message}</span>`;return;}
       formMsg.innerHTML='<span class="msg-success">Program updated.</span>';
@@ -217,7 +217,7 @@
     }
     async function deleteProgram(id,title){
       if(!confirm(`Delete "${title}"?`))return;
-      const res=await fetch('/api/programs/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
+      const res=await fetch(API_BASE + '/api/programs/'+id,{method:'DELETE',headers:{'Authorization':'Bearer '+token}});
       const data=await res.json();
       if(!res.ok){alert('Error: '+data.message);return;}
       loadPrograms();
@@ -225,7 +225,7 @@
     loadPrograms();
     async function seedPrograms() {
   if (!confirm('Load 10 pre-defined tech programs? This works only if no programs exist yet.')) return;
-  const res = await fetch('/api/programs/seed', {
+  const res = await fetch(API_BASE + '/api/programs/seed', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + token }
   });
