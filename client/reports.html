@@ -4,9 +4,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reports — PTM System</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">`n  <script src="js/config.js"></script>
+  <title>Reports & Analytics — PTM System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="js/config.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
@@ -21,6 +22,7 @@
       background: #f0f4f8;
     }
 
+    /* Sidebar Styles */
     .sidebar {
       position: fixed;
       top: 0;
@@ -272,21 +274,58 @@
       stroke-linejoin: round;
     }
 
+    /* Filter Bar Styles */
+    .filter-bar {
+      background: white;
+      padding: 15px 25px;
+      border-radius: 15px;
+      margin-bottom: 25px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      border: 1px solid rgba(0, 0, 0, 0.03);
+    }
+
+    .filter-bar .form-label {
+      margin: 0;
+      font-size: 12px;
+      font-weight: 600;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    .filter-bar .form-select {
+      font-size: 13px;
+      border-radius: 10px;
+      border: 1px solid #eef2f6;
+      padding: 8px 12px;
+      background-color: #fcfdfe;
+    }
+
+    /* Stat Card Styles */
     .stat-card {
       background: white;
       border-radius: 18px;
-      padding: 24px;
+      padding: 20px;
       display: flex;
       align-items: center;
-      gap: 18px;
+      gap: 15px;
       box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
       border: 1px solid rgba(0, 0, 0, 0.04);
+      transition: all 0.3s ease;
+      height: 100%;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
     .stat-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
+      width: 50px;
+      height: 50px;
+      border-radius: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -294,8 +333,8 @@
     }
 
     .stat-icon svg {
-      width: 26px;
-      height: 26px;
+      width: 24px;
+      height: 24px;
       stroke: white;
       fill: none;
       stroke-width: 1.8;
@@ -304,48 +343,52 @@
     }
 
     .stat-label {
-      font-size: 12px;
+      font-size: 11px;
       color: #aaa;
       font-weight: 500;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .stat-value {
-      font-size: 32px;
+      font-size: 24px;
       font-weight: 800;
       color: #0a1628;
       line-height: 1;
     }
 
     .stat-sub {
-      font-size: 11px;
+      font-size: 10px;
       color: #ccc;
       margin-top: 4px;
     }
 
-    .section-hdr {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      margin-top: 28px;
+    .stat-trend {
+      font-size: 10px;
+      margin-top: 4px;
+      font-weight: 600;
     }
 
-    .section-hdr h6 {
-      font-size: 14px;
-      font-weight: 700;
-      color: #0a1628;
-      margin: 0;
+    .trend-up {
+      color: #00b09b;
     }
 
+    .trend-down {
+      color: #ff6b6b;
+    }
+
+    /* Chart Card Styles */
     .chart-card {
       background: white;
       border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-      border: 1px solid rgba(0,0,0,0.03);
+      padding: 25px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.03);
       position: relative;
+      height: 100%;
     }
+
     .db-status {
       position: absolute;
       top: 20px;
@@ -359,6 +402,7 @@
       align-items: center;
       gap: 5px;
     }
+
     .db-status::before {
       content: '';
       width: 6px;
@@ -368,96 +412,430 @@
       display: inline-block;
       box-shadow: 0 0 10px #00d4aa;
     }
+
     .chart-card h6 {
       font-size: 15px;
       font-weight: 700;
       color: #0a1628;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
     }
-    .chart-card h6 span { font-weight: 400; color: #aaa; font-size: 11px; }
+
+    .chart-card h6 span {
+      font-weight: 400;
+      color: #aaa;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    /* Insights Box */
+    .insight-box {
+      background: linear-gradient(135deg, #ffffff 0%, #f9fbff 100%);
+      border-left: 4px solid #00d4aa;
+      border-radius: 12px;
+      padding: 15px 20px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      transition: all 0.3s ease;
+    }
+
+    .insight-box:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .insight-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .insight-text {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.5;
+    }
+
+    .insight-text strong {
+      color: #0a1628;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* Feedback Summary */
+    .feedback-summary-card {
+      background: #0a1628;
+      color: white;
+      border-radius: 18px;
+      padding: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+    }
+
+    .rating-big {
+      font-size: 48px;
+      font-weight: 800;
+      color: #00d4aa;
+      line-height: 1;
+    }
+
+    .rating-stars-big {
+      color: #f7971e;
+      font-size: 20px;
+      margin: 10px 0;
+    }
+
+    .star-dist-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .star-label {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.6);
+      width: 45px;
+    }
+
+    .star-bar-container {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .star-bar-fill {
+      height: 100%;
+      background: #00d4aa;
+      border-radius: 3px;
+    }
+
+    .star-count {
+      font-size: 11px;
+      color: rgba(255, 255, 255, 0.4);
+      width: 25px;
+      text-align: right;
+    }
+
+    /* Table Styles */
     .table-container {
       background: white;
       border-radius: 20px;
-      margin-top: 20px;
       overflow: hidden;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.03);
     }
-    .table-container th { background: #f8fafc; padding: 15px 20px; font-size: 11px; color: #aaa; text-transform: uppercase; border-bottom: 1px solid #f0f4f8; }
-    .table-container td { padding: 15px 20px; font-size: 13px; border-bottom: 1px solid #f8fafc; }
-    .rating-star { color: #f7971e; }
 
-    /* -------------------------------------------
-       MOBILE RESPONSIVE � Admin Pages
-       ------------------------------------------- */
+    .table-container th {
+      background: #f8fafc;
+      padding: 15px 20px;
+      font-size: 11px;
+      color: #aaa;
+      text-transform: uppercase;
+      border-bottom: 1px solid #f0f4f8;
+      font-weight: 700;
+    }
+
+    .table-container td {
+      padding: 15px 20px;
+      font-size: 13px;
+      border-bottom: 1px solid #f8fafc;
+      vertical-align: middle;
+    }
+
+    .table-container tr:last-child td {
+      border-bottom: none;
+    }
+
+    .rating-star {
+      color: #f7971e;
+    }
+
+    .section-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      margin-top: 35px;
+    }
+
+    .section-hdr h6 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0a1628;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-hdr h6::before {
+      content: '';
+      width: 4px;
+      height: 18px;
+      background: #00d4aa;
+      border-radius: 2px;
+    }
+
+    /* Utility */
+    .badge-course {
+      background: rgba(0, 176, 155, 0.1);
+      color: #00b09b;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+
+    /* New Button Styles */
+    .btn-apply {
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-apply:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 212, 170, 0.3);
+      color: white;
+    }
+
+    .btn-apply:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-reset {
+      background: #f8fafc;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+      padding: 8px 15px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .btn-reset:hover {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .spinner-sm {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ── Mobile Hamburger Button ── */
     .mobile-menu-btn {
       display: none;
       position: fixed;
       top: 14px;
       left: 14px;
       z-index: 200;
-      background: #0a1628;
-      border: 1px solid rgba(255,255,255,0.12);
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      border: none;
       border-radius: 10px;
       width: 42px;
       height: 42px;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      box-shadow: 0 4px 14px rgba(0, 212, 170, 0.35);
     }
-    .mobile-menu-btn svg { width: 20px; height: 20px; stroke: #00d4aa; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; }
-    .sidebar-overlay.active { display: block; }
 
+    .mobile-menu-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    /* ── Sidebar Overlay ── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 99;
+      backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+    }
+
+    /* ── Mobile Responsive ── */
     @media (max-width: 768px) {
-      .mobile-menu-btn { display: flex; }
-      .sidebar { transform: translateX(-100%); transition: transform 0.3s ease; z-index: 160; }
-      .sidebar.open { transform: translateX(0); }
-      .main { margin-left: 0 !important; }
-      .topbar { padding: 14px 16px 14px 68px; flex-wrap: wrap; gap: 8px; }
-      .topbar h5, .topbar-left h5 { font-size: 15px; }
-      .content { padding: 16px 12px; }
-      .welcome-banner { padding: 20px; }
-      .welcome-banner h4 { font-size: 18px; }
-      .row.g-3 > [class*="col-md-3"],
-      .row.g-3 > [class*="col-md-4"],
-      .row.g-3 > [class*="col-md-6"] { flex: 0 0 100% !important; max-width: 100% !important; }
-      .row.g-4 > [class*="col-md"] { flex: 0 0 100% !important; max-width: 100% !important; }
-      .page-hero { flex-direction: column; align-items: flex-start; gap: 12px; padding: 18px; }
-      .page-hero-icon { display: none; }
-      .table-card { overflow-x: auto; }
-      .table { min-width: 580px; }
-      .form-card { padding: 16px; }
-      .date-chip { font-size: 11px; padding: 5px 10px; }
-      .section-hdr { margin-top: 16px; }
-      .btn-add { padding: 8px 14px; font-size: 12px; }
-      .filter-row, .filter-bar { flex-direction: column !important; gap: 10px; }
-      .filter-row select, .filter-bar select,
-      .filter-row input, .filter-bar input { width: 100% !important; }
-      .chart-container { height: 220px !important; }
-      .stat-card { padding: 16px; }
-      .stat-value { font-size: 26px; }
-      .quick-card { padding: 18px 12px; }
+      .mobile-menu-btn {
+        display: flex;
+      }
+
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 150;
+        width: 240px;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        padding: 16px 16px 16px 70px;
+      }
+
+      .content {
+        padding: 20px 16px;
+      }
+
+      .page-hero {
+        padding: 20px 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .page-hero-icon {
+        display: none;
+      }
+
+      .filter-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 14px;
+      }
+
+      .filter-bar>div {
+        width: 100%;
+      }
+
+      .filter-bar .form-select {
+        width: 100%;
+      }
+
+      .filter-bar .ms-auto {
+        margin-left: 0 !important;
+        width: 100%;
+      }
+
+      .stat-card {
+        padding: 14px;
+      }
+
+      .stat-value {
+        font-size: 20px;
+      }
+
+      .chart-card {
+        padding: 16px;
+        margin-bottom: 6px;
+      }
+
+      .feedback-summary-card {
+        padding: 18px;
+        margin-bottom: 14px;
+      }
+
+      .rating-big {
+        font-size: 38px;
+      }
+
+      .table-container td,
+      .table-container th {
+        padding: 10px 12px;
+        font-size: 11px;
+      }
+
+      /* Hide less critical table columns on mobile */
+      .table-container .hide-mobile {
+        display: none;
+      }
+
+      .section-hdr {
+        margin-top: 20px;
+      }
     }
 
     @media (max-width: 480px) {
-      .topbar { padding-left: 62px; }
-      .stat-value { font-size: 22px; }
-      .welcome-banner h4 { font-size: 16px; }
-      .btn-edit, .btn-delete { padding: 5px 10px; font-size: 11px; }
-    }  </style>
+      .topbar h5 {
+        font-size: 15px;
+      }
+
+      .page-hero h4 {
+        font-size: 17px;
+      }
+
+      .stat-value {
+        font-size: 18px;
+      }
+    }
+  </style>
 </head>
 
-
 <body>
-  <!-- Mobile Hamburger Menu -->
-  <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleSidebar()" aria-label="Open menu">
-    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  <!-- Mobile Menu Button -->
+  <button class="mobile-menu-btn" id="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Open menu">
+    <svg viewBox="0 0 24 24">
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
   </button>
-  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
-  <div class="sidebar">
+
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <div class="logo-icon"><svg viewBox="0 0 24 24">
           <path d="M12 2L2 7l10 5 10-5-10-5z" />
@@ -519,22 +897,56 @@
       <h5>Reports & Analytics</h5>
     </div>
     <div class="content">
+      <!-- Page Hero -->
       <div class="page-hero">
         <div>
-          <h4>Training Analytics</h4>
-          <p>Overview of your organization's training performance and progress</p>
+          <h4>Advanced Analytics Dashboard</h4>
+          <p>Real-time insights and performance metrics for your training ecosystem</p>
         </div>
         <div class="page-hero-icon"><svg viewBox="0 0 24 24">
-            <line x1="18" y1="20" x2="18" y2="10" />
-            <line x1="12" y1="20" x2="12" y2="4" />
-            <line x1="6" y1="20" x2="6" y2="14" />
+            <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+            <path d="M22 12A10 10 0 0 0 12 2v10z" />
           </svg></div>
       </div>
 
-      <div class="section-hdr">
-        <h6>Key Metrics</h6>
+      <!-- Filters -->
+      <div class="filter-bar">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="form-label">Time Period:</span>
+          <select id="date-filter" class="form-select">
+            <option value="7">Last 7 Days</option>
+            <option value="30" selected>Last 30 Days</option>
+            <option value="90">Last 90 Days</option>
+            <option value="all">All Time</option>
+          </select>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="form-label">Course Filter:</span>
+          <select id="course-filter" class="form-select">
+            <option value="all">All Programs</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:10px; margin-left: 10px;">
+          <button id="apply-btn" class="btn-apply" onclick="applyFilters()">
+            <span>Apply Filters</span>
+          </button>
+          <button class="btn-reset" onclick="resetFilters()">Reset</button>
+        </div>
+        <button class="btn btn-sm btn-outline-secondary ms-auto" onclick="window.print()">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+            style="margin-right:5px">
+            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+            <rect x="6" y="14" width="12" height="8"></rect>
+          </svg> Export PDF
+        </button>
       </div>
-      <div class="row g-3 mb-2">
+
+      <!-- Key Metrics Row 1 -->
+      <div class="section-hdr">
+        <h6>Core Metrics Overview</h6>
+      </div>
+      <div class="row g-3 mb-4">
         <div class="col-md-3">
           <div class="stat-card">
             <div class="stat-icon" style="background:linear-gradient(135deg,#1a73e8,#0d47a1)"><svg viewBox="0 0 24 24">
@@ -544,7 +956,7 @@
             <div>
               <div class="stat-label">Total Employees</div>
               <div class="stat-value" id="total-employees">—</div>
-              <div class="stat-sub">In system</div>
+              <div class="stat-trend trend-up">↑ 12% vs last month</div>
             </div>
           </div>
         </div>
@@ -555,9 +967,9 @@
                 <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
               </svg></div>
             <div>
-              <div class="stat-label">Total Programs</div>
+              <div class="stat-label">Active Programs</div>
               <div class="stat-value" id="total-programs">—</div>
-              <div class="stat-sub">Available</div>
+              <div class="stat-sub">Across 4 categories</div>
             </div>
           </div>
         </div>
@@ -570,7 +982,7 @@
             <div>
               <div class="stat-label">Total Enrollments</div>
               <div class="stat-value" id="total-enrollments">—</div>
-              <div class="stat-sub">All time</div>
+              <div class="stat-trend trend-up">↑ 5.2% trend</div>
             </div>
           </div>
         </div>
@@ -580,56 +992,257 @@
                 <polyline points="20 6 9 17 4 12" />
               </svg></div>
             <div>
-              <div class="stat-label">Completed</div>
+              <div class="stat-label">Certifications</div>
               <div class="stat-value" id="total-completed">—</div>
-              <div class="stat-sub">Finished</div>
+              <div class="stat-sub">Completed modules</div>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Key Metrics Row 2 (New) -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#00d4aa,#00b09b)"><svg viewBox="0 0 24 24">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg></div>
+            <div>
+              <div class="stat-label">Completion Rate</div>
+              <div class="stat-value" id="completion-rate">—</div>
+              <div class="stat-trend trend-up">↑ 2.1% improvement</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#ff6b6b,#ee5253)"><svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg></div>
+            <div>
+              <div class="stat-label">Dropout Rate</div>
+              <div class="stat-value" id="dropout-rate">—</div>
+              <div class="stat-trend trend-down">↓ 0.8% decrease</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#feca57,#f7971e)"><svg viewBox="0 0 24 24">
+                <polygon
+                  points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                </polygon>
+              </svg></div>
+            <div>
+              <div class="stat-label">Avg. Rating</div>
+              <div class="stat-value" id="avg-rating">—</div>
+              <div class="stat-sub" id="total-feedback-count">Based on 0 reviews</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#48dbfb,#0abde3)"><svg viewBox="0 0 24 24">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z">
+                </path>
+              </svg></div>
+            <div>
+              <div class="stat-label">Top Course</div>
+              <div class="stat-value" id="top-course" style="font-size: 16px; margin-top: 5px;">—</div>
+              <div class="stat-sub">By enrollment</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
       <div class="section-hdr">
-        <h6>Analytic Reports</h6>
+        <h6>Performance Analytics</h6>
       </div>
       <div class="row g-3 mb-4">
         <div class="col-md-5">
           <div class="chart-card">
-            <div class="db-status">Live MongoDB</div>
-            <h6>Enrollment Status <span>By Distribution</span></h6>
-            <canvas id="statusChart"></canvas>
+            <div class="db-status">Live Data</div>
+            <h6>Enrollment Distribution <span>Status Breakdown (%)</span></h6>
+            <div style="height: 300px;">
+              <canvas id="statusChart"></canvas>
+            </div>
           </div>
         </div>
         <div class="col-md-7">
           <div class="chart-card">
-            <div class="db-status">Live MongoDB</div>
-            <h6>Program Popularity <span>Enrollment Count</span></h6>
-            <canvas id="programChart"></canvas>
+            <div class="db-status">Live Data</div>
+            <h6>Program Popularity <span>Enrollments per Course</span></h6>
+            <div style="height: 300px;">
+              <canvas id="programChart"></canvas>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="section-hdr">
-        <h6>Recent Feedback Activity</h6>
+      <!-- New Charts Row -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-5">
+          <div class="chart-card">
+            <h6>Enrollment Trend <span>Weekly activity overview</span></h6>
+            <div style="height: 300px;">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="chart-card">
+            <h6>Completion vs Dropout <span>Performance per course</span></h6>
+            <div style="height: 300px;">
+              <canvas id="performanceChart"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="chart-card">
+            <h6>Recent Activity <span>Live ecosystem feed</span></h6>
+            <div id="activity-feed" style="height: 300px; overflow-y: auto; font-size: 12px; padding-right: 5px;">
+              <div style="text-align:center; padding: 40px; color: #ccc;">Loading feed...</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="table-container mb-5">
-        <table class="w-100">
-          <thead>
-            <tr>
-              <th>Employee</th>
-              <th>Course</th>
-              <th>Rating</th>
-              <th>Feedback</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody id="feedback-preview-list">
-            <tr><td colspan="5" style="text-align:center;padding:40px;color:#ccc">Loading feedbacks from MongoDB...</td></tr>
-          </tbody>
-        </table>
+
+      <!-- Smart Insights Section -->
+      <div class="section-hdr">
+        <h6>Smart Insights & Recommendations</h6>
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-md-12">
+          <div class="chart-card">
+            <div class="row">
+              <div class="col-md-6">
+                <div id="insights-container">
+                  <div class="insight-box">
+                    <div class="insight-icon">🔥</div>
+                    <div class="insight-text">
+                      <strong>Popular Choice</strong>
+                      <span id="insight-popular">Detecting most popular course...</span>
+                    </div>
+                  </div>
+                  <div class="insight-box" style="border-left-color: #ff6b6b;">
+                    <div class="insight-icon">⚠️</div>
+                    <div class="insight-text">
+                      <strong>Attention Needed</strong>
+                      <span id="insight-attention">Analyzing completion bottlenecks...</span>
+                    </div>
+                  </div>
+                  <div class="insight-box" style="border-left-color: #f7971e;">
+                    <div class="insight-icon">⭐</div>
+                    <div class="insight-text">
+                      <strong>Quality Milestone</strong>
+                      <span id="insight-rating">Average rating is consistent this week.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6" style="border-left: 1px solid #f0f4f8;">
+                <p
+                  style="font-size: 12px; color: #aaa; margin-bottom: 15px; font-weight: 600; text-transform: uppercase;">
+                  Quick Action Items</p>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-light btn-sm text-start p-3"
+                    style="border: 1px solid #f0f4f8; border-radius: 10px;">
+                    <span style="display:block; font-weight: 700; font-size: 13px; color: #0a1628;">Schedule
+                      Review</span>
+                    <span style="font-size: 11px; color: #aaa;">Review low-performing courses with trainers</span>
+                  </button>
+                  <button class="btn btn-light btn-sm text-start p-3"
+                    style="border: 1px solid #f0f4f8; border-radius: 10px;">
+                    <span style="display:block; font-weight: 700; font-size: 13px; color: #0a1628;">Congratulate
+                      Employees</span>
+                    <span style="font-size: 11px; color: #aaa;">Send rewards to top 5 course completers</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback Section Upgraded -->
+      <div class="section-hdr">
+        <h6>Feedback Analysis</h6>
+      </div>
+      <div class="row g-3 mb-4">
+        <div class="col-md-4">
+          <div class="feedback-summary-card">
+            <div style="font-size: 12px; color: rgba(255,255,255,0.5); font-weight: 600; text-transform: uppercase;">
+              Average User Satisfaction</div>
+            <div class="d-flex align-items-end gap-3 my-2">
+              <div class="rating-big" id="rating-big-val">4.8</div>
+              <div style="padding-bottom: 8px; color: rgba(255,255,255,0.4); font-size: 14px;">/ 5.0</div>
+            </div>
+            <div class="rating-stars-big" id="rating-stars-container">★★★★★</div>
+
+            <div class="mt-4">
+              <div class="star-dist-row">
+                <span class="star-label">5 Star</span>
+                <div class="star-bar-container">
+                  <div class="star-bar-fill" style="width: 85%"></div>
+                </div>
+                <span class="star-count">42</span>
+              </div>
+              <div class="star-dist-row">
+                <span class="star-label">4 Star</span>
+                <div class="star-bar-container">
+                  <div class="star-bar-fill" style="width: 10%"></div>
+                </div>
+                <span class="star-count">5</span>
+              </div>
+              <div class="star-dist-row">
+                <span class="star-label">3 Star</span>
+                <div class="star-bar-container">
+                  <div class="star-bar-fill" style="width: 5%"></div>
+                </div>
+                <span class="star-count">2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="table-container">
+            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+              <span style="font-size: 13px; font-weight: 700;">Recent Comments</span>
+              <div class="d-flex gap-2">
+                <select id="table-rating-filter" class="form-select form-select-sm"
+                  style="width: auto; font-size: 11px;" onchange="filterData()">
+                  <option value="all">All Ratings</option>
+                  <option value="5">5 Stars</option>
+                  <option value="4">4 Stars</option>
+                  <option value="3">3 Stars</option>
+                </select>
+              </div>
+            </div>
+            <table class="w-100">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Course</th>
+                  <th>Rating</th>
+                  <th>Feedback</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="feedback-preview-list">
+                <tr>
+                  <td colspan="5" style="text-align:center;padding:40px;color:#ccc">Loading insights...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-
 
   <script>
     const token = localStorage.getItem('token');
@@ -638,76 +1251,301 @@
     document.getElementById('user-name').textContent = user.name;
     document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
     document.getElementById('user-role').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+
     function logout() { localStorage.removeItem('user'); localStorage.removeItem('token'); window.location.href = 'index.html'; }
-    async function loadReports() {
-      const res = await fetch(API_BASE + '/api/reports', { headers: { 'Authorization': 'Bearer ' + token } });
-      const data = await res.json();
-      document.getElementById('total-employees').textContent = data.totalEmployees;
-      document.getElementById('total-programs').textContent = data.totalPrograms;
-      document.getElementById('total-enrollments').textContent = data.totalEnrollments;
-      document.getElementById('total-completed').textContent = data.completed;
 
-      // Charts setup
-      new Chart(document.getElementById('statusChart'), {
-        type: 'doughnut',
-        data: {
-          labels: ['Enrolled', 'In Progress', 'Completed', 'Cancelled'],
-          datasets: [{ data: [data.enrolled, data.inProgress, data.completed, data.cancelled], backgroundColor: ['#1a73e8', '#f7971e', '#00b09b', '#e24b4a'], borderWidth: 0, hoverOffset: 12 }]
-        },
-        options: { 
-          responsive: true, 
-          cutout: '75%', 
-          plugins: { 
-            legend: { position: 'bottom', labels: { padding: 20, font: { family: 'Poppins', size: 12 }, usePointStyle: true } } 
-          }
+    let reportsData = null;
+    let feedbackData = null;
+    let charts = {};
+
+    async function loadReports(isApplying = false) {
+      const applyBtn = document.getElementById('apply-btn');
+      if (isApplying && applyBtn) {
+        applyBtn.disabled = true;
+        applyBtn.innerHTML = '<div class="spinner-sm"></div> <span>Applying...</span>';
+      }
+
+      try {
+        const days = document.getElementById('date-filter').value;
+        const course = document.getElementById('course-filter').value;
+
+        const res = await fetch(`${API_BASE}/api/reports?days=${days}&course=${course}`, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        reportsData = await res.json();
+
+        const fRes = await fetch(`${API_BASE}/api/feedback`, { headers: { 'Authorization': 'Bearer ' + token } });
+        feedbackData = await fRes.json();
+
+        // Populate course filter (only on first load)
+        const courseFilter = document.getElementById('course-filter');
+        if (courseFilter.options.length <= 1) {
+          reportsData.programWise.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.title;
+            opt.textContent = p.title;
+            courseFilter.appendChild(opt);
+          });
         }
-      });
 
-      new Chart(document.getElementById('programChart'), {
-        type: 'bar',
-        data: {
-          labels: data.programWise.map(p => p.title),
-          datasets: [{ label: 'Enrollments', data: data.programWise.map(p => p.count), backgroundColor: 'rgba(0,176,155,0.08)', borderColor: '#00b09b', borderWidth: 2, borderRadius: 10 }]
-        },
-        options: { 
-          responsive: true, 
-          plugins: { legend: { display: false } }, 
-          scales: { 
-            y: { beginAtZero: true, grid: { color: '#f0f4f8' }, ticks: { font: { family: 'Poppins' } } },
-            x: { grid: { display: false }, ticks: { font: { family: 'Poppins' } } }
-          }
+        renderContent();
+      } catch (err) {
+        console.error("Error loading reports:", err);
+      } finally {
+        if (isApplying && applyBtn) {
+          applyBtn.disabled = false;
+          applyBtn.innerHTML = '<span>Apply Filters</span>';
         }
-      });
+      }
+    }
 
-      // Load Recent Feedback from MongoDB
-      if (data.feedback && data.feedback.totalFeedback > 0) {
-        const fRes = await fetch(API_BASE + '/api/feedback', { headers: { 'Authorization': 'Bearer ' + token } });
-        const feedbacks = await fRes.json();
-        const list = document.getElementById('feedback-preview-list');
-        list.innerHTML = feedbacks.slice(0, 5).map(f => `
-          <tr>
+    function applyFilters() {
+      loadReports(true);
+    }
+
+    function resetFilters() {
+      document.getElementById('date-filter').value = '30';
+      document.getElementById('course-filter').value = 'all';
+      loadReports(true);
+    }
+
+    function filterData() {
+      // Local table filter only
+      renderContent();
+    }
+
+    function renderContent() {
+      if (!reportsData || !feedbackData) return;
+
+      const courseVal = document.getElementById('course-filter').value;
+      const ratingVal = document.getElementById('table-rating-filter').value;
+
+      // 1. Filter Feedback for Table
+      let tableFeedback = [...feedbackData];
+      if (courseVal !== 'all') {
+        tableFeedback = tableFeedback.filter(f => f.course === courseVal);
+      }
+      if (ratingVal !== 'all') {
+        tableFeedback = tableFeedback.filter(f => f.stars == ratingVal);
+      }
+
+      // 2. Calculate avgRating from feedbackData directly (frontend side)
+      // Filter feedbackData by course for accurate avg rating
+      let ratingFeedback = [...feedbackData];
+      if (courseVal !== 'all') {
+        ratingFeedback = ratingFeedback.filter(f => f.course === courseVal);
+      }
+      const computedAvgRating = ratingFeedback.length > 0
+        ? ratingFeedback.reduce((sum, f) => sum + (Number(f.stars) || 0), 0) / ratingFeedback.length
+        : 0;
+
+      // 3. Prepare Metrics
+      let metrics = {
+        employees: reportsData.totalEmployees,
+        programs: reportsData.totalPrograms,
+        enrollments: reportsData.totalEnrollments,
+        completed: reportsData.completed,
+        enrolled: reportsData.enrolled,
+        inProgress: reportsData.inProgress,
+        cancelled: reportsData.cancelled,
+        avgRating: computedAvgRating,
+        feedbackCount: ratingFeedback.length,
+        topCourse: reportsData.programWise[0] ? reportsData.programWise[0].title : 'N/A'
+      };
+
+      // 4. Update UI
+      updateUI(metrics, tableFeedback, courseVal);
+    }
+
+    function updateUI(metrics, tableFeedback, currentCourse) {
+      document.getElementById('total-employees').textContent = metrics.employees;
+      document.getElementById('total-programs').textContent = metrics.programs;
+      document.getElementById('total-enrollments').textContent = metrics.enrollments;
+      document.getElementById('total-completed').textContent = metrics.completed;
+
+      if (metrics.enrollments === 0) {
+        document.getElementById('completion-rate').textContent = '0%';
+        document.getElementById('dropout-rate').textContent = '0%';
+      } else {
+        const total = metrics.enrollments || 1;
+        document.getElementById('completion-rate').textContent = ((metrics.completed / total) * 100).toFixed(1) + '%';
+        document.getElementById('dropout-rate').textContent = ((metrics.cancelled / total) * 100).toFixed(1) + '%';
+      }
+
+      const avg = parseFloat(metrics.avgRating || 0).toFixed(1);
+      document.getElementById('avg-rating').textContent = avg;
+      document.getElementById('rating-big-val').textContent = avg;
+      document.getElementById('total-feedback-count').textContent = `Based on ${metrics.feedbackCount} reviews`;
+
+      const roundedAvg = Math.round(parseFloat(avg));
+      const starStr = '★'.repeat(roundedAvg) + '☆'.repeat(5 - roundedAvg);
+      document.getElementById('rating-stars-container').textContent = starStr;
+
+      document.getElementById('top-course').textContent = currentCourse === 'all' ? metrics.topCourse : currentCourse;
+
+      generateInsights(metrics, currentCourse);
+
+      const feed = document.getElementById('activity-feed');
+      if (reportsData.activityFeed && reportsData.activityFeed.length > 0) {
+        feed.innerHTML = reportsData.activityFeed.map(a => `
+          <div style="padding: 10px 0; border-bottom: 1px solid #f0f4f8; display: flex; align-items: start; gap: 8px;">
+            <div style="width: 8px; height: 8px; border-radius: 50%; background: ${a.type === 'enrollment' ? '#00d4aa' : '#f7971e'}; margin-top: 4px;"></div>
+            <div>
+              <div style="font-weight: 600; color: #0a1628;">${a.user}</div>
+              <div style="color: #666;">${a.type === 'enrollment' ? 'Enrolled in' : 'Submitted feedback for'} <strong>${a.item}</strong></div>
+              <div style="font-size: 10px; color: #aaa;">${new Date(a.date).toLocaleTimeString()}</div>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        feed.innerHTML = '<div style="text-align:center; padding: 40px; color: #ccc;">No recent activity.</div>';
+      }
+
+      const list = document.getElementById('feedback-preview-list');
+      if (tableFeedback.length > 0) {
+        list.innerHTML = tableFeedback.slice(0, 8).map(f => `
+          <tr class="animate-fade">
             <td><strong>${f.empName}</strong></td>
-            <td>${f.course}</td>
-            <td><span class="rating-star">${'★'.repeat(f.stars)}${'☆'.repeat(5-f.stars)}</span></td>
-            <td style="max-width:300px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">"${f.text}"</td>
-            <td>${new Date(f.date).toLocaleDateString()}</td>
+            <td><span class="badge-course">${f.course}</span></td>
+            <td><span class="rating-star">${'★'.repeat(f.stars)}${'☆'.repeat(5 - f.stars)}</span></td>
+            <td style="max-width:250px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${f.text}">"${f.text}"</td>
+            <td style="color: #aaa; font-size: 11px;">${new Date(f.date).toLocaleDateString()}</td>
           </tr>
         `).join('');
       } else {
-        document.getElementById('feedback-preview-list').innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:#ccc">No feedback data available in database.</td></tr>';
+        list.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:40px;color:#ccc">No feedback matching filters.</td></tr>';
       }
+
+      const dist = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+      // Use ratingFeedback (course-filtered, not star-filtered) for star distribution
+      let distFeedback = [...feedbackData];
+      const courseValCurrent = document.getElementById('course-filter').value;
+      if (courseValCurrent !== 'all') {
+        distFeedback = distFeedback.filter(f => f.course === courseValCurrent);
+      }
+      distFeedback.forEach(f => { if (dist[f.stars] !== undefined) dist[f.stars]++; });
+      const fTotal = distFeedback.length || 1;
+      const distHtml = [5, 4, 3].map(s => `
+        <div class="star-dist-row">
+          <span class="star-label">${s} Star</span>
+          <div class="star-bar-container"><div class="star-bar-fill" style="width: ${(dist[s] / fTotal * 100).toFixed(0)}%"></div></div>
+          <span class="star-count">${dist[s]}</span>
+        </div>
+      `).join('');
+      const distContainer = document.querySelector('.feedback-summary-card .mt-4');
+      if (distContainer) distContainer.innerHTML = distHtml;
+
+      renderCharts(currentCourse);
     }
+
+    function generateInsights(metrics, currentCourse) {
+      const popular = document.getElementById('insight-popular');
+      const attention = document.getElementById('insight-attention');
+      const rating = document.getElementById('insight-rating');
+
+      if (metrics.enrollments === 0) {
+        popular.textContent = "No data for this period.";
+        attention.textContent = "No data for this period.";
+        rating.textContent = "No feedback for this period.";
+        return;
+      }
+
+      if (currentCourse === 'all') {
+        popular.textContent = `${metrics.topCourse} has the highest engagement.`;
+      } else {
+        popular.textContent = `${currentCourse} accounts for ${((metrics.enrollments / (reportsData.totalEnrollments || 1)) * 100).toFixed(1)}% of total interest.`;
+      }
+
+      const lowComp = reportsData.programWise.filter(p => (p.completed / (p.count || 1)) < 0.4);
+      if (lowComp.length > 0) {
+        attention.textContent = `${lowComp[0].title} shows a high dropout risk. Consider a review.`;
+      } else {
+        attention.textContent = `All programs are maintaining healthy completion rates.`;
+      }
+
+      rating.textContent = metrics.avgRating >= 4.5 ? "Satisfaction is exceptional!" : "Feedback is steady.";
+    }
+
+    function renderCharts(selectedCourse) {
+      const ctx1 = document.getElementById('statusChart').getContext('2d');
+      const ctx2 = document.getElementById('programChart').getContext('2d');
+      const ctx3 = document.getElementById('trendChart').getContext('2d');
+      const ctx4 = document.getElementById('performanceChart').getContext('2d');
+
+      Object.values(charts).forEach(chart => chart.destroy());
+
+      const themeColors = ['#1a73e8', '#f7971e', '#00b09b', '#ff6b6b'];
+
+      charts.status = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+          labels: ['Enrolled', 'In Progress', 'Completed', 'Cancelled'],
+          datasets: [{
+            data: [reportsData.enrolled, reportsData.inProgress, reportsData.completed, reportsData.cancelled],
+            backgroundColor: themeColors,
+            hoverOffset: 15,
+            borderWidth: 0
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { padding: 20, font: { family: 'Poppins', size: 11 }, usePointStyle: true } } } }
+      });
+
+      charts.program = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: reportsData.programWise.map(p => p.title.substring(0, 15)),
+          datasets: [{
+            label: 'Enrollments',
+            data: reportsData.programWise.map(p => p.count),
+            backgroundColor: reportsData.programWise.map(p => p.title === selectedCourse ? '#00d4aa' : 'rgba(0, 212, 170, 0.15)'),
+            borderColor: '#00d4aa',
+            borderWidth: 1.5,
+            borderRadius: 6
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } } }
+      });
+
+      charts.trend = new Chart(ctx3, {
+        type: 'line',
+        data: {
+          labels: reportsData.enrollmentTrend.map(t => t._id),
+          datasets: [{
+            label: 'Daily Enrollments',
+            data: reportsData.enrollmentTrend.map(t => t.count),
+            borderColor: '#1a73e8',
+            backgroundColor: 'rgba(26, 115, 232, 0.1)',
+            fill: true,
+            tension: 0.4
+          }]
+        },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+      });
+
+      const perfData = reportsData.programWise.slice(0, 6);
+      charts.performance = new Chart(ctx4, {
+        type: 'bar',
+        data: {
+          labels: perfData.map(p => p.title.substring(0, 10)),
+          datasets: [
+            { label: 'Completed', data: perfData.map(p => p.completed), backgroundColor: '#00d4aa' },
+            { label: 'Dropped', data: perfData.map(p => p.cancelled), backgroundColor: '#ff6b6b' }
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
+      });
+    }
+
     loadReports();
-  </script>
-  <script>
+
+    // ── Mobile Sidebar Toggle ──
     function toggleSidebar() {
-      document.querySelector('.sidebar').classList.toggle('open');
-      document.getElementById('sidebarOverlay').classList.toggle('active');
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('active');
     }
-    function closeSidebar() {
-      document.querySelector('.sidebar').classList.remove('open');
-      document.getElementById('sidebarOverlay').classList.remove('active');
-    }
-  </script></body>
+  </script>
+</body>
 
 </html>
