@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Enrollment = require('../models/Enrollment');
 const Employee = require('../models/Employee');
-const User = require('../models/User');
+const User = require('../models/user');
 const authMiddleware = require('../middleware/auth');
 
 router.get('/', authMiddleware, async (req, res) => {
