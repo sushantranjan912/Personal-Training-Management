@@ -1,0 +1,2340 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Training — PTM System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #eef2f7;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100vh;
+      background: linear-gradient(180deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-icon svg {
+      width: 19px;
+      height: 19px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .logo-text {
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .logo-text span {
+      color: #00d4aa;
+    }
+
+    .logo-sub {
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 10px;
+      display: block;
+    }
+
+    .sidebar-menu {
+      padding: 20px 12px;
+      flex: 1;
+    }
+
+    .menu-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.25);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 0 8px;
+      margin: 16px 0 6px;
+    }
+
+    .menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 12px;
+      border-radius: 10px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: none;
+      background: none;
+      width: 100%;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.2s;
+      margin-bottom: 2px;
+    }
+
+    .menu-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: white;
+    }
+
+    .menu-btn.active {
+      background: rgba(0, 176, 155, 0.2);
+      color: #00d4aa;
+      border: 1px solid rgba(0, 212, 170, 0.2);
+    }
+
+    .menu-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 14px 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-ava {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .user-name-el {
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role-el {
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 10px;
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .logout-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: rgba(255, 255, 255, 0.3);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .logout-btn:hover svg {
+      stroke: #ff6b6b;
+    }
+
+    .main {
+      margin-left: 240px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: white;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e8ecf0;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+    }
+
+    .topbar-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0a1628;
+    }
+
+    .topbar-sub {
+      font-size: 11px;
+      color: #aaa;
+    }
+
+    .date-chip {
+      background: rgba(0, 176, 155, 0.08);
+      border: 1px solid rgba(0, 176, 155, 0.2);
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-size: 11px;
+      color: #00b09b;
+      font-weight: 500;
+    }
+
+    .content {
+      padding: 28px 32px 60px;
+    }
+
+    .tab-sec {
+      display: none;
+    }
+
+    .tab-sec.active {
+      display: block;
+    }
+
+    /* Banner */
+    .emp-banner {
+      background: linear-gradient(135deg, #00b09b, #096a5f);
+      border-radius: 18px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .emp-banner::before {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 50%;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .emp-banner h3 {
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 4px;
+    }
+
+    .emp-banner h3 span {
+      color: #c8fff4;
+    }
+
+    .emp-banner p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Stat Cards */
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .stat-icon svg {
+      width: 22px;
+      height: 22px;
+      stroke: white;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: #aaa;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0a1628;
+      line-height: 1;
+    }
+
+    .stat-sub {
+      font-size: 10px;
+      color: #ccc;
+      margin-top: 3px;
+    }
+
+    .sec-hdr {
+      margin: 24px 0 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .sec-hdr h6 {
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+      margin: 0;
+    }
+
+    .sec-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(0, 176, 155, 0.3), transparent);
+    }
+
+    /* Course Cards */
+    .course-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid #f0f4f8;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 14px;
+      transition: all 0.2s;
+      border-left: 4px solid #e8ecf0;
+    }
+
+    .course-card.status-enrolled {
+      border-left-color: #1a73e8;
+    }
+
+    .course-card.status-in-progress {
+      border-left-color: #f7971e;
+    }
+
+    .course-card.status-completed {
+      border-left-color: #00b09b;
+    }
+
+    .course-card:hover {
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .course-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .course-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0a1628;
+    }
+
+    .spill {
+      display: inline-block;
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .spill-enrolled {
+      background: #e8f0fe;
+      color: #1a73e8;
+    }
+
+    .spill-in-progress {
+      background: #fff3e0;
+      color: #f7971e;
+    }
+
+    .spill-completed {
+      background: #e3f7f5;
+      color: #00b09b;
+    }
+
+    .course-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .meta-i {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .prog-wrap {
+      margin-bottom: 16px;
+    }
+
+    .prog-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+
+    .prog-bg {
+      background: #f0f4f8;
+      border-radius: 20px;
+      height: 7px;
+      overflow: hidden;
+    }
+
+    .prog-fill {
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, #00b09b, #00d4aa);
+      transition: width 0.5s;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, #1a73e8, #0d47a1);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: opacity 0.2s;
+    }
+
+    .btn-start:hover {
+      opacity: 0.9;
+    }
+
+    .btn-study {
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: opacity 0.2s;
+    }
+
+    .btn-study:hover {
+      opacity: 0.9;
+    }
+
+    .btn-quiz {
+      background: linear-gradient(135deg, #f7971e, #c75000);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 20px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: opacity 0.2s;
+    }
+
+    .btn-quiz:hover {
+      opacity: 0.9;
+    }
+
+    .completed-tag {
+      color: #00b09b;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .completed-tag svg {
+      width: 18px;
+      height: 18px;
+      stroke: #00b09b;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal-box {
+      background: white;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 740px;
+      max-height: 88vh;
+      overflow-y: auto;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-hdr {
+      padding: 24px 28px 18px;
+      border-bottom: 1px solid #f0f4f8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      background: white;
+      z-index: 2;
+      border-radius: 20px 20px 0 0;
+    }
+
+    .modal-hdr h4 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #0a1628;
+      margin: 0;
+    }
+
+    .modal-close {
+      background: #f0f4f8;
+      border: none;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      color: #888;
+    }
+
+    .modal-close:hover {
+      background: #ffe0e0;
+      color: #e24b4a;
+    }
+
+    .modal-bdy {
+      padding: 24px 28px;
+    }
+
+    /* Doc reader */
+    .doc-hero {
+      background: linear-gradient(135deg, #0a1628, #1a3a5c);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      color: white;
+    }
+
+    .doc-tag {
+      display: inline-block;
+      background: rgba(0, 212, 170, 0.2);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      color: #00d4aa;
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .doc-hero h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .doc-hero p {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .doc-section {
+      margin-bottom: 24px;
+    }
+
+    .doc-section h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0a1628;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #00b09b;
+      display: inline-block;
+    }
+
+    .doc-section p {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+
+    .doc-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .doc-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: #555;
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    .doc-list li::before {
+      content: '✓';
+      color: #00b09b;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .doc-divider {
+      border: none;
+      border-top: 1px solid #f0f4f8;
+      margin: 20px 0;
+    }
+
+    .read-confirm {
+      background: linear-gradient(135deg, #f8fafc, #eef2f7);
+      border-radius: 14px;
+      padding: 20px 24px;
+      text-align: center;
+      border: 2px dashed #00b09b;
+    }
+
+    .read-confirm p {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 14px;
+    }
+
+    .btn-confirm-read {
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 4px 16px rgba(0, 176, 155, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-confirm-read:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 176, 155, 0.4);
+    }
+
+    /* Quiz */
+    .quiz-prog {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .quiz-prog-bg {
+      flex: 1;
+      background: #f0f4f8;
+      border-radius: 20px;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .quiz-prog-fill {
+      height: 100%;
+      border-radius: 20px;
+      background: linear-gradient(90deg, #f7971e, #00b09b);
+      transition: width 0.4s;
+    }
+
+    .quiz-prog-txt {
+      font-size: 11px;
+      color: #aaa;
+      white-space: nowrap;
+      font-weight: 600;
+    }
+
+    .q-text {
+      font-size: 15px;
+      font-weight: 600;
+      color: #0a1628;
+      margin-bottom: 18px;
+      line-height: 1.5;
+    }
+
+    .opts {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      margin-bottom: 20px;
+    }
+
+    .opt-btn {
+      padding: 13px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #e8ecf0;
+      background: white;
+      color: #555;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .opt-btn:hover:not(:disabled) {
+      border-color: #00b09b;
+      color: #00b09b;
+      background: rgba(0, 176, 155, 0.05);
+    }
+
+    .opt-btn.selected {
+      border-color: #1a73e8;
+      background: rgba(26, 115, 232, 0.05);
+      color: #1a73e8;
+    }
+
+    .opt-btn.correct {
+      border-color: #00b09b;
+      background: rgba(0, 176, 155, 0.1);
+      color: #00b09b;
+      font-weight: 700;
+    }
+
+    .opt-btn.wrong {
+      border-color: #e24b4a;
+      background: rgba(226, 75, 74, 0.08);
+      color: #e24b4a;
+    }
+
+    .btn-next {
+      width: 100%;
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 13px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 4px 14px rgba(0, 176, 155, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-next:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* Result */
+    .result-box {
+      text-align: center;
+      padding: 10px;
+    }
+
+    .result-icon {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+    }
+
+    .result-icon svg {
+      width: 38px;
+      height: 38px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .result-score {
+      font-size: 52px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .result-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0a1628;
+      margin-bottom: 8px;
+    }
+
+    .result-msg {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .btn-cert {
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      margin-right: 10px;
+      box-shadow: 0 4px 14px rgba(0, 176, 155, 0.3);
+    }
+
+    .btn-retry2 {
+      background: #fff3e0;
+      color: #f7971e;
+      border: 1.5px solid rgba(247, 151, 30, 0.3);
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Certificate */
+    .cert-card {
+      background: white;
+      border-radius: 16px;
+      padding: 22px;
+      border: 1px solid #e3f7f5;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      margin-bottom: 14px;
+    }
+
+    .cert-hdr {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .cert-ico {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .cert-ico svg {
+      width: 24px;
+      height: 24px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .cert-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0a1628;
+      margin-bottom: 3px;
+    }
+
+    .cert-date {
+      font-size: 11px;
+      color: #aaa;
+    }
+
+    .cert-meta {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 14px;
+    }
+
+    .btn-dl {
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Notification */
+    .notif-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 18px;
+      border: 1px solid #f0f4f8;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .notif-dot {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .notif-dot svg {
+      width: 17px;
+      height: 17px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .notif-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0a1628;
+      margin-bottom: 2px;
+    }
+
+    .notif-desc {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .notif-time {
+      font-size: 10px;
+      color: #bbb;
+      margin-top: 4px;
+    }
+
+    /* Profile */
+    .profile-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .profile-ava {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 28px;
+      font-weight: 800;
+      margin: 0 auto 12px;
+      box-shadow: 0 0 0 4px rgba(0, 212, 170, 0.15);
+    }
+
+    .profile-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: #0a1628;
+      text-align: center;
+      margin-bottom: 3px;
+    }
+
+    .profile-role-t {
+      font-size: 12px;
+      color: #aaa;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .p-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f4f8;
+      font-size: 13px;
+    }
+
+    .p-row:last-child {
+      border-bottom: none;
+    }
+
+    .p-lbl {
+      color: #999;
+    }
+
+    .p-val {
+      color: #0a1628;
+      font-weight: 600;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 50px 20px;
+      color: #ccc;
+    }
+
+    .empty-state svg {
+      width: 44px;
+      height: 44px;
+      stroke: #ddd;
+      fill: none;
+      stroke-width: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .empty-state h6 {
+      font-size: 14px;
+      color: #bbb;
+      margin-bottom: 6px;
+    }
+
+    .empty-state p {
+      font-size: 12px;
+    }
+
+    /* Feedback Section */
+    .feedback-card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      margin-bottom: 24px;
+    }
+
+    .fb-group {
+      margin-bottom: 20px;
+    }
+
+    .fb-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #0a1628;
+      margin-bottom: 8px;
+    }
+
+    .fb-group select,
+    .fb-group input,
+    .fb-group textarea {
+      width: 100%;
+      border: 1.5px solid #e8ecf0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      background: white;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    .fb-group select:focus,
+    .fb-group input:focus,
+    .fb-group textarea:focus {
+      border-color: #00b09b;
+    }
+
+    .fb-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .char-count {
+      font-size: 11px;
+      color: #aaa;
+      text-align: right;
+      margin-top: 4px;
+    }
+
+    .star-rating {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: 4px;
+    }
+
+    .star-rating input {
+      display: none;
+    }
+
+    .star-rating label {
+      font-size: 24px;
+      color: #e8ecf0;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .star-rating input:checked~label,
+    .star-rating label:hover,
+    .star-rating label:hover~label {
+      color: #f7971e;
+    }
+
+    .rating-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px dashed #e8ecf0;
+    }
+
+    .rating-row:last-child {
+      border-bottom: none;
+    }
+
+    .rating-label {
+      font-size: 13px;
+      color: #555;
+      font-weight: 500;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+    }
+
+    .radio-opt {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .radio-opt input {
+      cursor: pointer;
+    }
+
+    .btn-submit-fb {
+      width: 100%;
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 4px 16px rgba(0, 176, 155, 0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-submit-fb:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 176, 155, 0.4);
+    }
+
+    .fb-success {
+      background: #e3f7f5;
+      border: 1px solid rgba(0, 176, 155, 0.3);
+      color: #00b09b;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      margin-top: 16px;
+      display: none;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fb-history-card {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 12px;
+      border-left: 4px solid #00b09b;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .fb-h-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .fb-h-course {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0a1628;
+    }
+
+    .fb-h-date {
+      font-size: 11px;
+      color: #888;
+    }
+
+    .fb-h-type {
+      display: inline-block;
+      background: rgba(0, 176, 155, 0.1);
+      color: #00b09b;
+      border-radius: 12px;
+      padding: 2px 10px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .fb-h-text {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+
+    .fb-h-stars {
+      color: #f7971e;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Doc Modal -->
+  <div class="modal-overlay" id="doc-modal">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <h4 id="doc-modal-title">📖 Course Material</h4>
+        <button class="modal-close" onclick="closeModal('doc-modal')">✕</button>
+      </div>
+      <div class="modal-bdy" id="doc-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Quiz Modal -->
+  <div class="modal-overlay" id="quiz-modal">
+    <div class="modal-box">
+      <div class="modal-hdr">
+        <h4 id="quiz-modal-title">📝 Course Assessment</h4>
+        <button class="modal-close" onclick="closeModal('quiz-modal')">✕</button>
+      </div>
+      <div class="modal-bdy" id="quiz-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg></div>
+      <div>
+        <div class="logo-text">PTM<span>System</span></div>
+        <div class="logo-sub">Employee Portal</div>
+      </div>
+    </div>
+    <div class="sidebar-menu">
+      <div class="menu-label">My Training</div>
+      <button class="menu-btn active" onclick="showTab('courses',this)">
+        <svg viewBox="0 0 24 24">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+        </svg>
+        My Courses
+      </button>
+      <button class="menu-btn" onclick="showTab('certificates',this)">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="6" />
+          <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+        </svg>
+        Certificates
+      </button>
+      <div class="menu-label">Personal</div>
+      <button class="menu-btn" onclick="showTab('feedback',this)">
+        <svg viewBox="0 0 24 24">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>
+        Give Feedback
+      </button>
+      <button class="menu-btn" onclick="showTab('notifications',this)">
+        <svg viewBox="0 0 24 24">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+          <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+        </svg>
+        Notifications
+      </button>
+      <button class="menu-btn" onclick="showTab('profile',this)">
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+          <circle cx="12" cy="7" r="4" />
+        </svg>
+        My Profile
+      </button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-ava" id="user-avatar">E</div>
+        <div class="user-info">
+          <div class="user-name-el" id="user-name">Employee</div>
+          <div class="user-role-el">Employee Portal</div>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="page-title">My Training Dashboard</div>
+        <div class="topbar-sub">Track your learning journey</div>
+      </div>
+      <div class="date-chip" id="current-date"></div>
+    </div>
+
+    <div class="content">
+
+      <div class="emp-banner">
+        <div class="eyebrow">Employee Portal</div>
+        <h3 id="welcome-msg">Welcome, <span>Employee!</span></h3>
+        <p>Read the course documentation, pass the assessment and earn your certificate.</p>
+      </div>
+
+      <!-- Stats -->
+      <div class="row g-3 mb-2">
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#1a73e8,#0d47a1)">
+              <svg viewBox="0 0 24 24">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-label">Assigned</div>
+              <div class="stat-value" id="stat-total">—</div>
+              <div class="stat-sub">Total courses</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#f7971e,#c75000)">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-label">In Progress</div>
+              <div class="stat-value" id="stat-inprogress">—</div>
+              <div class="stat-sub">Active now</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#00b09b,#00d4aa)">
+              <svg viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-label">Completed</div>
+              <div class="stat-value" id="stat-completed">—</div>
+              <div class="stat-sub">Finished</div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:linear-gradient(135deg,#7b2ff7,#4a00a0)">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="6" />
+                <path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11" />
+              </svg>
+            </div>
+            <div>
+              <div class="stat-label">Certificates</div>
+              <div class="stat-value" id="stat-certs">—</div>
+              <div class="stat-sub">Earned</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Courses -->
+      <div id="tab-courses" class="tab-sec active">
+        <div class="sec-hdr">
+          <h6>My Assigned Courses</h6>
+          <div class="sec-line"></div>
+        </div>
+        <div id="courses-list"></div>
+      </div>
+
+      <!-- Certificates -->
+      <div id="tab-certificates" class="tab-sec">
+        <div class="sec-hdr">
+          <h6>My Certificates</h6>
+          <div class="sec-line"></div>
+        </div>
+        <div id="cert-list"></div>
+      </div>
+
+      <!-- Notifications -->
+      <div id="tab-notifications" class="tab-sec">
+        <div class="sec-hdr">
+          <h6>Notifications</h6>
+          <div class="sec-line"></div>
+        </div>
+        <div id="notif-list"></div>
+      </div>
+
+      <!-- Profile -->
+      <div id="tab-profile" class="tab-sec">
+        <div class="sec-hdr">
+          <h6>My Profile</h6>
+          <div class="sec-line"></div>
+        </div>
+        <div class="profile-card">
+          <div class="profile-ava" id="p-ava">E</div>
+          <div class="profile-name" id="p-name">—</div>
+          <div class="profile-role-t">Employee — PTM System</div>
+          <div class="p-row"><span class="p-lbl">Email</span><span class="p-val" id="p-email">—</span></div>
+          <div class="p-row"><span class="p-lbl">Role</span><span class="p-val">Employee</span></div>
+          <div class="p-row"><span class="p-lbl">Total Courses</span><span class="p-val" id="p-total">—</span></div>
+          <div class="p-row"><span class="p-lbl">Completed</span><span class="p-val" id="p-done">—</span></div>
+          <div class="p-row"><span class="p-lbl">Certificates</span><span class="p-val" id="p-certs">—</span></div>
+        </div>
+      </div>
+
+      <!-- Feedback -->
+      <div id="tab-feedback" class="tab-sec">
+        <div class="sec-hdr">
+          <h6>Course Feedback</h6>
+          <div class="sec-line"></div>
+        </div>
+
+        <div class="feedback-card">
+          <div class="fb-group">
+            <label>Select Course / Program *</label>
+            <select id="fb-course">
+              <option value="">-- Choose a course --</option>
+            </select>
+          </div>
+
+          <div class="fb-group">
+            <label>Rate Your Experience *</label>
+            <div
+              style="background:rgba(255,255,255,0.5);border-radius:12px;padding:10px 16px;border:1px solid #e8ecf0;">
+              <!-- Course Content -->
+              <div class="rating-row">
+                <span class="rating-label">Course Content</span>
+                <div class="star-rating">
+                  <input type="radio" id="cc5" name="rate_cc" value="5"><label for="cc5">★</label>
+                  <input type="radio" id="cc4" name="rate_cc" value="4"><label for="cc4">★</label>
+                  <input type="radio" id="cc3" name="rate_cc" value="3"><label for="cc3">★</label>
+                  <input type="radio" id="cc2" name="rate_cc" value="2"><label for="cc2">★</label>
+                  <input type="radio" id="cc1" name="rate_cc" value="1"><label for="cc1">★</label>
+                </div>
+              </div>
+              <!-- Trainer Quality -->
+              <div class="rating-row">
+                <span class="rating-label">Trainer Quality</span>
+                <div class="star-rating">
+                  <input type="radio" id="tq5" name="rate_tq" value="5"><label for="tq5">★</label>
+                  <input type="radio" id="tq4" name="rate_tq" value="4"><label for="tq4">★</label>
+                  <input type="radio" id="tq3" name="rate_tq" value="3"><label for="tq3">★</label>
+                  <input type="radio" id="tq2" name="rate_tq" value="2"><label for="tq2">★</label>
+                  <input type="radio" id="tq1" name="rate_tq" value="1"><label for="tq1">★</label>
+                </div>
+              </div>
+              <!-- Platform Experience -->
+              <div class="rating-row">
+                <span class="rating-label">Platform Experience</span>
+                <div class="star-rating">
+                  <input type="radio" id="pe5" name="rate_pe" value="5"><label for="pe5">★</label>
+                  <input type="radio" id="pe4" name="rate_pe" value="4"><label for="pe4">★</label>
+                  <input type="radio" id="pe3" name="rate_pe" value="3"><label for="pe3">★</label>
+                  <input type="radio" id="pe2" name="rate_pe" value="2"><label for="pe2">★</label>
+                  <input type="radio" id="pe1" name="rate_pe" value="1"><label for="pe1">★</label>
+                </div>
+              </div>
+              <!-- Overall Rating -->
+              <div class="rating-row">
+                <span class="rating-label"><strong>Overall Rating</strong></span>
+                <div class="star-rating">
+                  <input type="radio" id="ov5" name="rate_ov" value="5"><label for="ov5">★</label>
+                  <input type="radio" id="ov4" name="rate_ov" value="4"><label for="ov4">★</label>
+                  <input type="radio" id="ov3" name="rate_ov" value="3"><label for="ov3">★</label>
+                  <input type="radio" id="ov2" name="rate_ov" value="2"><label for="ov2">★</label>
+                  <input type="radio" id="ov1" name="rate_ov" value="1"><label for="ov1">★</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="fb-group">
+            <label>Feedback Type *</label>
+            <select id="fb-type">
+              <option value="Issue">Issue / Bug</option>
+              <option value="Suggestion">Suggestion</option>
+              <option value="Improvement">Improvement</option>
+              <option value="Appreciation">Appreciation</option>
+            </select>
+          </div>
+
+          <div class="fb-group">
+            <label>Detailed Feedback *</label>
+            <textarea id="fb-text"
+              placeholder="Write your detailed feedback or suggestions to improve this training program..."
+              oninput="updateCharCount()" maxlength="500"></textarea>
+            <div class="char-count"><span id="fb-count">0</span> / 500 characters</div>
+          </div>
+
+          <div class="fb-group">
+            <label>Improvement Suggestions (Optional)</label>
+            <input type="text" id="fb-improve" placeholder="What can be improved?">
+          </div>
+
+          <div class="fb-group">
+            <label>Would you recommend this course? *</label>
+            <div class="radio-group">
+              <label class="radio-opt"><input type="radio" name="fb_rec" value="Yes" checked> Yes 👍</label>
+              <label class="radio-opt"><input type="radio" name="fb_rec" value="No"> No 👎</label>
+            </div>
+          </div>
+
+          <button class="btn-submit-fb" onclick="submitFeedback()">Submit Feedback</button>
+          <div class="fb-success" id="fb-success-msg">✅ Thank you! Your feedback has been submitted.</div>
+        </div>
+
+        <div class="sec-hdr" style="margin-top:36px">
+          <h6>My Feedback History</h6>
+          <div class="sec-line"></div>
+        </div>
+        <div id="fb-history-list"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
+    let allEnrollments = [];
+    let currentEnrollmentId = null;
+    let currentProgramTitle = null;
+    let quizQuestions = [];
+    let currentQ = 0;
+    let score = 0;
+    let answered = false;
+
+    if (!token || !user || user.role === 'admin') { window.location.href = 'index.html'; }
+
+    document.getElementById('user-name').textContent = user.name;
+    document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
+    document.getElementById('welcome-msg').innerHTML = `Welcome, <span>${user.name}!</span>`;
+    document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    function logout() { localStorage.removeItem('user'); localStorage.removeItem('token'); window.location.href = 'index.html'; }
+
+    function showTab(tab, btn) {
+      document.querySelectorAll('.tab-sec').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      btn.classList.add('active');
+      const titles = { courses: 'My Training Dashboard', feedback: 'Give Feedback', certificates: 'My Certificates', notifications: 'Notifications', profile: 'My Profile' };
+      document.getElementById('page-title').textContent = titles[tab];
+      if (tab === 'certificates') renderCerts();
+      if (tab === 'notifications') renderNotifs();
+      if (tab === 'profile') renderProfile();
+      if (tab === 'feedback') { renderFeedbackOptions(); renderFeedbackHistory(); }
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+    // ─── COURSE CONTENT (pre-defined per program) ───
+    const COURSE_CONTENT = {
+      'Web Development Fundamentals': {
+        intro: 'Web development is the process of building and maintaining websites. It involves front-end (client-side) and back-end (server-side) development. Modern web development relies on three core technologies: HTML for structure, CSS for styling, and JavaScript for interactivity.',
+        sections: [
+          { title: 'HTML Basics', content: 'HTML (HyperText Markup Language) is the backbone of every webpage. It uses tags to define elements like headings, paragraphs, links, images and forms. Semantic HTML improves readability and SEO by using meaningful tags like <header>, <nav>, <main>, and <footer>.' },
+          { title: 'CSS Fundamentals', content: 'CSS (Cascading Style Sheets) controls the visual presentation of HTML elements. Key concepts include the box model (margin, border, padding, content), flexbox for layouts, CSS Grid for two-dimensional layouts, and responsive design using media queries.' },
+          { title: 'JavaScript Essentials', content: 'JavaScript adds interactivity to web pages. Core concepts include variables, functions, DOM manipulation, events, fetch API for HTTP requests, and ES6+ features like arrow functions, destructuring, and async/await for asynchronous programming.' },
+          { title: 'Responsive Design', content: 'Responsive design ensures websites work on all screen sizes. Use viewport meta tag, fluid grids, flexible images, and media queries. Mobile-first approach: design for mobile screens first, then enhance for larger screens.' }
+        ],
+        practices: ['Always write semantic HTML for better accessibility', 'Use CSS variables for consistent theming', 'Minimize DOM manipulation for better performance', 'Test on multiple browsers and devices', 'Use version control (Git) for all projects']
+      },
+      'React.js Complete Guide': {
+        intro: 'React.js is a JavaScript library developed by Facebook for building user interfaces. It uses a component-based architecture where UIs are broken into small, reusable pieces. React uses a Virtual DOM for efficient rendering and one-way data flow for predictable state management.',
+        sections: [
+          { title: 'Components & JSX', content: 'React components are independent, reusable UI pieces. Functional components are the modern standard. JSX (JavaScript XML) lets you write HTML-like syntax in JavaScript. Components accept props (properties) as inputs and return JSX elements.' },
+          { title: 'State & Hooks', content: 'State holds dynamic data that changes over time. The useState hook manages local component state. useEffect handles side effects like API calls and subscriptions. useContext provides global state without prop drilling. Custom hooks allow logic reuse across components.' },
+          { title: 'React Router', content: 'React Router enables client-side navigation without page reloads. Key concepts: BrowserRouter wraps the app, Route defines paths, Link creates navigation links, useNavigate programmatically redirects, and useParams accesses URL parameters.' },
+          { title: 'State Management', content: 'For complex apps, use Redux or Context API. Redux follows three principles: single source of truth, state is read-only, changes made via pure functions (reducers). Context API provides simpler state sharing for medium-complexity applications.' }
+        ],
+        practices: ['Keep components small and focused on one responsibility', 'Use keys when rendering lists', 'Avoid direct state mutation — always use setState', 'Memoize expensive calculations with useMemo', 'Use TypeScript for better type safety']
+      },
+      'Node.js & Express Backend': {
+        intro: 'Node.js is a JavaScript runtime built on Chrome\'s V8 engine that allows running JavaScript on the server. It is event-driven and non-blocking, making it ideal for I/O-heavy applications. Express.js is a minimal, flexible web framework for Node.js that simplifies building REST APIs.',
+        sections: [
+          { title: 'Node.js Core Concepts', content: 'Node.js uses an event loop for asynchronous operations. Modules system (require/import) organizes code. Built-in modules include fs (file system), http, path, and os. npm (Node Package Manager) manages third-party packages.' },
+          { title: 'Express.js Basics', content: 'Express provides routing, middleware, and request/response handling. Routes handle specific HTTP methods (GET, POST, PUT, DELETE). Middleware functions execute between request and response. Error handling middleware catches and processes errors globally.' },
+          { title: 'REST API Design', content: 'REST (Representational State Transfer) APIs use HTTP methods and status codes. GET retrieves data, POST creates, PUT updates, DELETE removes. Use JSON for data exchange. Proper status codes: 200 OK, 201 Created, 400 Bad Request, 404 Not Found, 500 Server Error.' },
+          { title: 'Authentication & Security', content: 'JWT (JSON Web Tokens) enable stateless authentication. Store sensitive data in environment variables. Use bcrypt for password hashing. Implement CORS for cross-origin requests. Validate and sanitize all user inputs to prevent injection attacks.' }
+        ],
+        practices: ['Use environment variables for configuration', 'Always validate incoming request data', 'Implement proper error handling', 'Use async/await with try-catch blocks', 'Follow RESTful naming conventions for endpoints']
+      },
+      'MongoDB Database Management': {
+        intro: 'MongoDB is a NoSQL document database that stores data in flexible, JSON-like documents (BSON). Unlike relational databases, MongoDB does not require a fixed schema, making it ideal for applications with evolving data structures. Mongoose is an ODM (Object Data Modeling) library for MongoDB and Node.js.',
+        sections: [
+          { title: 'MongoDB Basics', content: 'MongoDB stores data in collections (similar to tables) containing documents (similar to rows). Documents are BSON objects that can have varying structures. The MongoDB query language uses JSON-like syntax for CRUD operations: find, insertOne, updateOne, deleteOne.' },
+          { title: 'Mongoose ODM', content: 'Mongoose provides schema validation, type casting, and query building for MongoDB. Define schemas with data types and validation rules. Models create instances of documents. Middleware (hooks) execute before or after database operations.' },
+          { title: 'Querying & Indexing', content: 'MongoDB supports rich query operators: $eq, $gt, $in, $regex, and more. Aggregation pipeline transforms and analyzes data. Indexes improve query performance — create indexes on frequently queried fields. Compound indexes optimize multi-field queries.' },
+          { title: 'Data Relationships', content: 'MongoDB handles relationships via embedding (nested documents) or referencing (storing IDs). Embed data that is accessed together frequently. Reference data that is large or accessed independently. Use populate() in Mongoose to join referenced documents.' }
+        ],
+        practices: ['Design schemas based on data access patterns', 'Always index fields used in frequent queries', 'Use projection to return only needed fields', 'Implement proper error handling for database operations', 'Regular backups and monitoring in production']
+      },
+      'Python Programming': {
+        intro: 'Python is a high-level, interpreted programming language known for its simple, readable syntax. Created by Guido van Rossum in 1991, Python emphasizes code readability and developer productivity. It is used in web development, data science, AI, automation, and scientific computing.',
+        sections: [
+          { title: 'Python Basics', content: 'Python uses indentation instead of braces for code blocks. Data types include int, float, str, bool, list, tuple, dict, and set. Functions are defined with def keyword. Python is dynamically typed — no need to declare variable types explicitly.' },
+          { title: 'Object-Oriented Programming', content: 'Python supports OOP with classes and objects. Key concepts: encapsulation (bundling data and methods), inheritance (extending parent classes), polymorphism (different implementations of same interface), and abstraction (hiding implementation details).' },
+          { title: 'File Handling & Libraries', content: 'Python reads/writes files with open() function. Standard library includes os, sys, json, csv, datetime modules. Popular third-party libraries: NumPy for numerical computing, Pandas for data analysis, Requests for HTTP calls, Flask/Django for web development.' },
+          { title: 'Error Handling', content: 'Python uses try-except-finally blocks for exception handling. Common exceptions: TypeError, ValueError, FileNotFoundError, KeyError. Custom exceptions extend the Exception class. Context managers (with statement) ensure proper resource cleanup.' }
+        ],
+        practices: ['Follow PEP 8 style guide for clean code', 'Use virtual environments for project isolation', 'Write docstrings for all functions and classes', 'Use list comprehensions for concise iteration', 'Always handle exceptions gracefully']
+      },
+      'Data Structures & Algorithms': {
+        intro: 'Data Structures and Algorithms (DSA) are the foundation of computer science and software engineering. Data structures organize and store data efficiently. Algorithms are step-by-step procedures for solving problems. Understanding DSA helps write efficient, optimized code and is essential for technical interviews.',
+        sections: [
+          { title: 'Linear Data Structures', content: 'Arrays store elements in contiguous memory with O(1) access. Linked lists use nodes with pointers — efficient insertion/deletion but O(n) access. Stacks follow LIFO (Last In First Out) — used for undo operations, function calls. Queues follow FIFO (First In First Out) — used for scheduling.' },
+          { title: 'Non-Linear Data Structures', content: 'Trees are hierarchical structures. Binary Search Trees (BST) enable O(log n) search. Heaps are complete binary trees used in priority queues. Graphs consist of vertices and edges — directed or undirected. Hash tables provide O(1) average lookup using hash functions.' },
+          { title: 'Sorting Algorithms', content: 'Bubble Sort: O(n²) — simple but inefficient. Merge Sort: O(n log n) — stable, divide and conquer. Quick Sort: O(n log n) average — fast in practice. Heap Sort: O(n log n) — in-place. Knowing time and space complexity is crucial for choosing the right algorithm.' },
+          { title: 'Searching & Complexity', content: 'Linear Search: O(n) — checks every element. Binary Search: O(log n) — requires sorted array. Big O Notation describes algorithm efficiency: O(1) constant, O(log n) logarithmic, O(n) linear, O(n²) quadratic. Always aim for the lowest complexity solution.' }
+        ],
+        practices: ['Practice problems on LeetCode and HackerRank daily', 'Always analyze time and space complexity', 'Learn to recognize patterns: sliding window, two pointers, BFS/DFS', 'Start with brute force, then optimize', 'Draw diagrams to visualize data structures']
+      },
+      'Cloud Computing with AWS': {
+        intro: 'Amazon Web Services (AWS) is the world\'s most comprehensive cloud platform, offering over 200 services including computing, storage, databases, AI/ML, and networking. Cloud computing provides on-demand access to computing resources without the need to own physical infrastructure.',
+        sections: [
+          { title: 'Core AWS Services', content: 'EC2 (Elastic Compute Cloud) provides virtual servers. S3 (Simple Storage Service) offers scalable object storage. RDS manages relational databases. Lambda runs code without servers (serverless). VPC (Virtual Private Cloud) isolates your AWS resources in a private network.' },
+          { title: 'IAM & Security', content: 'IAM (Identity and Access Management) controls who can access AWS resources. Users, groups, roles, and policies define permissions. Principle of least privilege: grant only necessary permissions. Enable MFA (Multi-Factor Authentication) for all accounts. Use IAM roles for EC2 instances instead of embedding credentials.' },
+          { title: 'Storage & Databases', content: 'S3 storage classes: Standard, Infrequent Access, Glacier (archival). EBS (Elastic Block Store) provides persistent disk storage for EC2. DynamoDB is AWS\'s fully managed NoSQL database. ElastiCache provides in-memory caching. Always enable encryption at rest and in transit.' },
+          { title: 'Deployment & Scaling', content: 'Elastic Load Balancer distributes traffic across multiple instances. Auto Scaling automatically adjusts capacity based on demand. CloudFormation enables infrastructure as code. CloudWatch monitors resources and applications. Route 53 provides DNS management and routing.' }
+        ],
+        practices: ['Always follow the principle of least privilege for IAM', 'Enable CloudTrail for audit logging', 'Use multiple Availability Zones for high availability', 'Tag all resources for cost tracking', 'Regularly review and delete unused resources to control costs']
+      },
+      'Cybersecurity Fundamentals': {
+        intro: 'Cybersecurity is the practice of protecting computer systems, networks, and data from digital attacks, unauthorized access, and damage. As organizations increasingly rely on digital infrastructure, cybersecurity has become critical to business operations, privacy, and national security.',
+        sections: [
+          { title: 'Security Fundamentals', content: 'The CIA Triad: Confidentiality (data only accessible to authorized parties), Integrity (data accuracy and completeness), Availability (systems accessible when needed). Authentication verifies identity. Authorization determines what authenticated users can do. Non-repudiation ensures actions cannot be denied.' },
+          { title: 'Common Threats', content: 'Malware types: viruses (self-replicating), worms (spread across networks), trojans (disguised as legitimate software), ransomware (encrypts files for ransom). Social engineering attacks: phishing (email), spear phishing (targeted), vishing (voice), and smishing (SMS) exploit human psychology.' },
+          { title: 'Network Security', content: 'Firewalls filter network traffic based on rules. IDS (Intrusion Detection System) monitors for suspicious activity. VPN (Virtual Private Network) encrypts network traffic. SSL/TLS protocols encrypt data in transit. Network segmentation limits damage from breaches by isolating systems.' },
+          { title: 'Encryption & Cryptography', content: 'Symmetric encryption uses the same key for encryption and decryption (AES, DES). Asymmetric encryption uses public/private key pairs (RSA). Hashing creates fixed-length fingerprints of data (SHA-256, MD5). Digital signatures verify authenticity and integrity of messages.' }
+        ],
+        practices: ['Use strong, unique passwords and a password manager', 'Enable two-factor authentication everywhere', 'Keep systems and software updated with patches', 'Regular security audits and penetration testing', 'Train employees to recognize social engineering attacks']
+      },
+      'Machine Learning Basics': {
+        intro: 'Machine Learning (ML) is a subset of artificial intelligence that enables systems to learn and improve from experience without being explicitly programmed. ML algorithms identify patterns in data to make predictions or decisions. It powers applications like recommendation systems, image recognition, and natural language processing.',
+        sections: [
+          { title: 'Types of Machine Learning', content: 'Supervised Learning: trains on labeled data to predict outputs (classification and regression). Unsupervised Learning: finds patterns in unlabeled data (clustering, dimensionality reduction). Reinforcement Learning: agents learn through trial and error, receiving rewards for correct actions — used in robotics and games.' },
+          { title: 'Key Algorithms', content: 'Linear Regression predicts continuous values. Logistic Regression classifies binary outcomes. Decision Trees make predictions using tree-like decision paths. Random Forest combines multiple decision trees for better accuracy. K-Nearest Neighbors (KNN) classifies based on similarity to nearby examples.' },
+          { title: 'Model Training Process', content: 'Data collection and preprocessing (cleaning, normalization, encoding). Feature selection — choosing relevant input variables. Train-test split: typically 80% training, 20% testing. Model evaluation metrics: accuracy, precision, recall, F1-score for classification; MSE, RMSE for regression. Cross-validation prevents overfitting.' },
+          { title: 'Python ML Libraries', content: 'Scikit-learn provides ML algorithms, preprocessing tools, and evaluation metrics. NumPy handles numerical computing and array operations. Pandas manages structured data manipulation. Matplotlib and Seaborn create data visualizations. TensorFlow and PyTorch are used for deep learning and neural networks.' }
+        ],
+        practices: ['Always explore and understand your data before modeling', 'Handle missing values and outliers carefully', 'Normalize features for distance-based algorithms', 'Never evaluate on training data — use a separate test set', 'Start simple, then gradually increase model complexity']
+      },
+      'DevOps & CI/CD Pipeline': {
+        intro: 'DevOps is a culture and set of practices that combines software development (Dev) and IT operations (Ops) to shorten the development lifecycle and deliver high-quality software continuously. CI/CD (Continuous Integration/Continuous Delivery) automates the building, testing, and deployment of applications.',
+        sections: [
+          { title: 'Git & Version Control', content: 'Git tracks code changes and enables team collaboration. Key commands: git clone, commit, push, pull, branch, merge. Branching strategies: Git Flow uses feature, develop, release, hotfix branches. Pull Requests (PRs) enable code review before merging. Commit messages should be clear and descriptive.' },
+          { title: 'Docker & Containers', content: 'Docker packages applications and dependencies into containers for consistent environments. Dockerfile defines how to build an image. Docker Compose manages multi-container applications. Key commands: docker build, run, push, pull. Containers are lightweight, portable, and isolated from the host system.' },
+          { title: 'CI/CD Pipelines', content: 'Continuous Integration: developers frequently merge code, triggering automated builds and tests. Continuous Delivery: code is always in a deployable state. Continuous Deployment: every passing build automatically deploys to production. Jenkins, GitHub Actions, and GitLab CI are popular CI/CD tools.' },
+          { title: 'Monitoring & Infrastructure', content: 'Infrastructure as Code (IaC) manages infrastructure with code (Terraform, Ansible). Kubernetes orchestrates containerized applications across clusters. Monitoring tools: Prometheus collects metrics, Grafana visualizes them, ELK Stack analyzes logs. Alerts notify teams of issues before they affect users.' }
+        ],
+        practices: ['Commit small, frequent changes rather than large batches', 'Write automated tests for every new feature', 'Use feature flags for gradual rollouts', 'Monitor your deployments — never deploy blind', 'Document your pipeline and infrastructure configurations']
+      }
+    };
+
+    // ─── QUIZ QUESTIONS (pre-defined per program) ───
+    const QUIZ_DATA = {
+      'Web Development Fundamentals': [
+        { q: 'Which HTML tag is used to define the main navigation links of a website?', opts: ['<header>', '<nav>', '<aside>', '<section>'], ans: 1 },
+        { q: 'Which CSS property is used to create space outside an element\'s border?', opts: ['padding', 'border-spacing', 'margin', 'gap'], ans: 2 },
+        { q: 'Which JavaScript method is used to fetch data from an API?', opts: ['getData()', 'fetch()', 'getJSON()', 'request()'], ans: 1 },
+        { q: 'What does CSS Flexbox\'s "justify-content: center" do?', opts: ['Centers items vertically', 'Centers items horizontally', 'Adds spacing between items', 'Aligns items to the left'], ans: 1 },
+        { q: 'Which meta tag is essential for responsive web design?', opts: ['<meta charset="UTF-8">', '<meta name="viewport">', '<meta name="description">', '<meta name="author">'], ans: 1 },
+        { q: 'What is the purpose of semantic HTML?', opts: ['To make pages load faster', 'To add styling to elements', 'To give meaning to HTML structure', 'To enable JavaScript features'], ans: 2 },
+        { q: 'Which CSS unit is relative to the root element\'s font size?', opts: ['em', 'px', 'rem', 'vh'], ans: 2 },
+        { q: 'What does DOM stand for in web development?', opts: ['Data Object Model', 'Document Object Model', 'Design Object Method', 'Dynamic Object Model'], ans: 1 },
+        { q: 'Which HTTP method is used to submit form data to a server?', opts: ['GET', 'PUT', 'POST', 'DELETE'], ans: 2 },
+        { q: 'What is the correct way to declare a variable in modern JavaScript?', opts: ['var x = 5', 'let x = 5', 'variable x = 5', 'dim x = 5'], ans: 1 }
+      ],
+      'React.js Complete Guide': [
+        { q: 'What hook is used to add state to a functional component?', opts: ['useEffect', 'useState', 'useContext', 'useReducer'], ans: 1 },
+        { q: 'What does JSX stand for?', opts: ['JavaScript XML', 'Java Syntax Extension', 'JSON XML', 'JavaScript Extension'], ans: 0 },
+        { q: 'Which hook is used to perform side effects in React?', opts: ['useState', 'useCallback', 'useEffect', 'useMemo'], ans: 2 },
+        { q: 'How do you pass data from a parent to a child component?', opts: ['Using state', 'Using props', 'Using context only', 'Using refs'], ans: 1 },
+        { q: 'What is the Virtual DOM in React?', opts: ['A direct copy of the browser DOM', 'A lightweight in-memory representation of the real DOM', 'A JavaScript database', 'A CSS rendering engine'], ans: 1 },
+        { q: 'Which React hook prevents unnecessary re-renders of a component?', opts: ['useState', 'useEffect', 'useMemo', 'useRef'], ans: 2 },
+        { q: 'What is the key prop used for in React lists?', opts: ['Styling list items', 'Helping React identify changed/added/removed items', 'Sorting list items', 'Filtering list items'], ans: 1 },
+        { q: 'Which hook allows you to access context values?', opts: ['useState', 'useEffect', 'useContext', 'useReducer'], ans: 2 },
+        { q: 'What is React Router primarily used for?', opts: ['State management', 'API calls', 'Client-side navigation', 'CSS styling'], ans: 2 },
+        { q: 'In React, what triggers a component to re-render?', opts: ['Only prop changes', 'Only state changes', 'Both state and prop changes', 'Only context changes'], ans: 2 }
+      ],
+      'Node.js & Express Backend': [
+        { q: 'What is Node.js built on?', opts: ['Mozilla SpiderMonkey', 'Chrome V8 Engine', 'Microsoft Chakra', 'Safari JavaScriptCore'], ans: 1 },
+        { q: 'Which Express method handles GET requests?', opts: ['app.post()', 'app.get()', 'app.fetch()', 'app.retrieve()'], ans: 1 },
+        { q: 'What does REST stand for?', opts: ['Rapid Execution of Server Tasks', 'Representational State Transfer', 'Remote Server Technology', 'Relational State Transfer'], ans: 1 },
+        { q: 'What HTTP status code indicates a successful resource creation?', opts: ['200', '204', '201', '301'], ans: 2 },
+        { q: 'What is middleware in Express.js?', opts: ['A database connector', 'Functions that execute between request and response', 'A front-end framework', 'A testing library'], ans: 1 },
+        { q: 'Which module in Node.js is used to work with the file system?', opts: ['http', 'path', 'fs', 'os'], ans: 2 },
+        { q: 'What tool is used to manage Node.js packages?', opts: ['pip', 'composer', 'npm', 'gem'], ans: 2 },
+        { q: 'What does JWT stand for?', opts: ['JavaScript Web Token', 'JSON Web Token', 'Java Web Transaction', 'JSON Worker Thread'], ans: 1 },
+        { q: 'Which library is commonly used for password hashing in Node.js?', opts: ['crypto-js', 'md5', 'bcrypt', 'sha256'], ans: 2 },
+        { q: 'What does CORS stand for?', opts: ['Cross-Origin Resource Sharing', 'Client-Origin Request System', 'Cross-Object Routing Service', 'Content Origin Request Standard'], ans: 0 }
+      ],
+      'MongoDB Database Management': [
+        { q: 'What type of database is MongoDB?', opts: ['Relational (SQL)', 'Document (NoSQL)', 'Graph database', 'Column-family database'], ans: 1 },
+        { q: 'What format does MongoDB use to store documents?', opts: ['XML', 'CSV', 'BSON', 'YAML'], ans: 2 },
+        { q: 'Which MongoDB operator is used to match documents where a field is greater than a value?', opts: ['$lt', '$eq', '$gt', '$ne'], ans: 2 },
+        { q: 'What does Mongoose provide in Node.js?', opts: ['A REST API framework', 'Object Data Modeling for MongoDB', 'A CSS preprocessor', 'A testing framework'], ans: 1 },
+        { q: 'Which MongoDB method returns all documents in a collection?', opts: ['findOne()', 'findAll()', 'find()', 'getAll()'], ans: 2 },
+        { q: 'What is the purpose of indexing in MongoDB?', opts: ['To encrypt documents', 'To improve query performance', 'To compress data', 'To create backups'], ans: 1 },
+        { q: 'Which aggregation stage filters documents in MongoDB?', opts: ['$group', '$project', '$match', '$sort'], ans: 2 },
+        { q: 'In Mongoose, what is a Schema?', opts: ['A database connection', 'A definition of document structure and validation', 'A query method', 'An index configuration'], ans: 1 },
+        { q: 'What is the default field that MongoDB automatically adds to each document?', opts: ['_id', 'id', 'documentId', '_key'], ans: 0 },
+        { q: 'Which MongoDB method is used to update a single document?', opts: ['updateOne()', 'modifyOne()', 'editOne()', 'changeOne()'], ans: 0 }
+      ],
+      'Python Programming': [
+        { q: 'What keyword is used to define a function in Python?', opts: ['function', 'def', 'func', 'define'], ans: 1 },
+        { q: 'Which Python data type is immutable and ordered?', opts: ['List', 'Dictionary', 'Tuple', 'Set'], ans: 2 },
+        { q: 'What does OOP stand for?', opts: ['Object-Oriented Programming', 'Output-Oriented Processing', 'Object-Oriented Processing', 'Operator-Oriented Programming'], ans: 0 },
+        { q: 'Which Python keyword is used to handle exceptions?', opts: ['catch', 'error', 'except', 'handle'], ans: 2 },
+        { q: 'What is a Python list comprehension?', opts: ['A way to import modules', 'A concise way to create lists', 'A method to sort lists', 'A way to delete list items'], ans: 1 },
+        { q: 'Which Python library is most commonly used for data analysis?', opts: ['NumPy', 'Pandas', 'Requests', 'Flask'], ans: 1 },
+        { q: 'What does the "self" parameter represent in a Python class method?', opts: ['A static variable', 'The class itself', 'The current instance of the class', 'A global variable'], ans: 2 },
+        { q: 'Which file extension is used for Python scripts?', opts: ['.js', '.py', '.rb', '.php'], ans: 1 },
+        { q: 'What is PEP 8?', opts: ['A Python error code', 'Python\'s style guide for writing code', 'A package manager', 'A testing framework'], ans: 1 },
+        { q: 'Which Python module is used to work with dates and times?', opts: ['time', 'datetime', 'calendar', 'date'], ans: 1 }
+      ],
+      'Data Structures & Algorithms': [
+        { q: 'What is the time complexity of binary search?', opts: ['O(n)', 'O(n²)', 'O(log n)', 'O(1)'], ans: 2 },
+        { q: 'Which data structure follows the LIFO principle?', opts: ['Queue', 'Stack', 'Linked List', 'Tree'], ans: 1 },
+        { q: 'What is the worst-case time complexity of Bubble Sort?', opts: ['O(n log n)', 'O(log n)', 'O(n)', 'O(n²)'], ans: 3 },
+        { q: 'Which data structure is used in BFS (Breadth-First Search)?', opts: ['Stack', 'Queue', 'Array', 'Tree'], ans: 1 },
+        { q: 'What does a Hash Table provide on average?', opts: ['O(n) lookup', 'O(log n) lookup', 'O(1) lookup', 'O(n²) lookup'], ans: 2 },
+        { q: 'Which sorting algorithm uses the divide and conquer approach?', opts: ['Bubble Sort', 'Selection Sort', 'Insertion Sort', 'Merge Sort'], ans: 3 },
+        { q: 'What is a Binary Search Tree (BST)?', opts: ['A tree where all nodes have two children', 'A tree where left < root < right', 'A tree with only leaf nodes', 'A balanced tree always'], ans: 1 },
+        { q: 'What is the space complexity of storing n elements in an array?', opts: ['O(1)', 'O(log n)', 'O(n)', 'O(n²)'], ans: 2 },
+        { q: 'Which data structure uses nodes with pointers to next elements?', opts: ['Array', 'Stack', 'Linked List', 'Hash Table'], ans: 2 },
+        { q: 'What is memoization in algorithms?', opts: ['Sorting data in memory', 'Caching results of expensive function calls', 'Deleting unused variables', 'Compressing algorithm output'], ans: 1 }
+      ],
+      'Cloud Computing with AWS': [
+        { q: 'What does EC2 stand for in AWS?', opts: ['Elastic Container Cloud', 'Elastic Compute Cloud', 'Enterprise Cloud Computing', 'Extended Cloud Capacity'], ans: 1 },
+        { q: 'Which AWS service provides scalable object storage?', opts: ['EBS', 'EC2', 'S3', 'RDS'], ans: 2 },
+        { q: 'What does IAM stand for in AWS?', opts: ['Internet Access Management', 'Identity and Access Management', 'Infrastructure and Application Management', 'Internal API Management'], ans: 1 },
+        { q: 'Which AWS service runs code without provisioning servers?', opts: ['EC2', 'ECS', 'Lambda', 'Fargate'], ans: 2 },
+        { q: 'What is the principle of least privilege in AWS IAM?', opts: ['Give all users admin access', 'Grant only the minimum permissions necessary', 'Restrict all access by default', 'Allow public access to resources'], ans: 1 },
+        { q: 'Which AWS service is used for DNS management?', opts: ['CloudFront', 'Route 53', 'VPC', 'ELB'], ans: 1 },
+        { q: 'What does Auto Scaling in AWS do?', opts: ['Automatically backs up data', 'Automatically adjusts compute capacity', 'Automatically deploys code', 'Automatically optimizes costs'], ans: 1 },
+        { q: 'Which AWS service provides a managed relational database?', opts: ['DynamoDB', 'ElastiCache', 'RDS', 'Redshift'], ans: 2 },
+        { q: 'What is CloudFormation used for?', opts: ['Monitoring applications', 'Infrastructure as Code', 'Content delivery', 'User authentication'], ans: 1 },
+        { q: 'What does S3 Glacier provide?', opts: ['Real-time data access', 'Low-cost archival storage', 'Database management', 'Compute resources'], ans: 1 }
+      ],
+      'Cybersecurity Fundamentals': [
+        { q: 'What does the CIA Triad stand for?', opts: ['Confidentiality, Integrity, Availability', 'Cyber, Intelligence, Access', 'Control, Identify, Authenticate', 'Cryptography, Intrusion, Authorization'], ans: 0 },
+        { q: 'What type of attack tricks users into revealing sensitive information?', opts: ['Brute Force', 'SQL Injection', 'Phishing', 'DDoS'], ans: 2 },
+        { q: 'Which encryption standard is widely used for secure data transmission?', opts: ['MD5', 'SHA-1', 'AES', 'DES'], ans: 2 },
+        { q: 'What does VPN stand for?', opts: ['Virtual Private Network', 'Very Protected Network', 'Verified Personal Network', 'Virtual Public Node'], ans: 0 },
+        { q: 'What is a firewall primarily used for?', opts: ['Encrypting data', 'Filtering network traffic', 'Backing up files', 'Detecting malware'], ans: 1 },
+        { q: 'What does MFA stand for in security?', opts: ['Multiple Firewall Access', 'Multi-Factor Authentication', 'Managed Firewall Application', 'Malware Firewall Analysis'], ans: 1 },
+        { q: 'Which type of malware encrypts files and demands payment?', opts: ['Spyware', 'Adware', 'Ransomware', 'Worm'], ans: 2 },
+        { q: 'What is the difference between authentication and authorization?', opts: ['They are the same', 'Authentication verifies identity; authorization determines access', 'Authorization verifies identity; authentication determines access', 'Neither involves identity'], ans: 1 },
+        { q: 'Which protocol secures HTTP communication?', opts: ['FTP', 'SSH', 'TLS/SSL', 'UDP'], ans: 2 },
+        { q: 'What does an IDS (Intrusion Detection System) do?', opts: ['Blocks all network traffic', 'Monitors and alerts on suspicious activity', 'Encrypts network data', 'Manages user accounts'], ans: 1 }
+      ],
+      'Machine Learning Basics': [
+        { q: 'What type of learning uses labeled training data?', opts: ['Unsupervised Learning', 'Reinforcement Learning', 'Supervised Learning', 'Semi-supervised Learning'], ans: 2 },
+        { q: 'Which library provides ML tools and algorithms in Python?', opts: ['NumPy', 'Pandas', 'Scikit-learn', 'Matplotlib'], ans: 2 },
+        { q: 'What is overfitting in machine learning?', opts: ['Model performs well on all data', 'Model too closely fits training data and fails on new data', 'Model does not learn enough', 'Model has too few parameters'], ans: 1 },
+        { q: 'What is the purpose of train-test split?', opts: ['To clean the data', 'To evaluate model performance on unseen data', 'To normalize features', 'To select features'], ans: 1 },
+        { q: 'Which algorithm is used for classification tasks?', opts: ['Linear Regression', 'Logistic Regression', 'K-Means Clustering', 'PCA'], ans: 1 },
+        { q: 'What does the term "feature" mean in machine learning?', opts: ['A model parameter', 'An input variable used for prediction', 'A performance metric', 'A training technique'], ans: 1 },
+        { q: 'What is K-Means clustering?', opts: ['A supervised classification algorithm', 'An unsupervised algorithm that groups similar data', 'A regression algorithm', 'A feature selection method'], ans: 1 },
+        { q: 'Which metric measures the proportion of correctly predicted instances?', opts: ['Precision', 'Recall', 'Accuracy', 'F1-Score'], ans: 2 },
+        { q: 'What is gradient descent used for?', opts: ['Data preprocessing', 'Feature selection', 'Minimizing the loss function during training', 'Splitting data into train and test'], ans: 2 },
+        { q: 'What does deep learning primarily use?', opts: ['Decision Trees', 'Neural Networks with multiple layers', 'Support Vector Machines', 'Random Forests'], ans: 1 }
+      ],
+      'DevOps & CI/CD Pipeline': [
+        { q: 'What does CI/CD stand for?', opts: ['Continuous Integration/Continuous Delivery', 'Code Integration/Code Deployment', 'Cloud Infrastructure/Cloud Delivery', 'Continuous Inspection/Code Delivery'], ans: 0 },
+        { q: 'Which tool is used for containerization in DevOps?', opts: ['Kubernetes', 'Jenkins', 'Docker', 'Ansible'], ans: 2 },
+        { q: 'What is a Dockerfile?', opts: ['A deployment script', 'Instructions to build a Docker image', 'A network configuration file', 'A database schema file'], ans: 1 },
+        { q: 'What is Kubernetes primarily used for?', opts: ['Building Docker images', 'Orchestrating containerized applications', 'Writing CI pipelines', 'Managing Git repositories'], ans: 1 },
+        { q: 'What does Infrastructure as Code (IaC) mean?', opts: ['Writing code that runs on servers', 'Managing infrastructure through code and configuration files', 'Coding in cloud environments', 'Using code editors for deployment'], ans: 1 },
+        { q: 'Which branching strategy uses feature, develop, release, and hotfix branches?', opts: ['Trunk-based development', 'GitHub Flow', 'Git Flow', 'Feature Flag strategy'], ans: 2 },
+        { q: 'What is the purpose of a pull request?', opts: ['To fetch code from remote', 'To deploy code to production', 'To review code before merging into main branch', 'To delete a branch'], ans: 2 },
+        { q: 'Which tool provides monitoring and alerting for Kubernetes clusters?', opts: ['Docker Compose', 'Prometheus and Grafana', 'Jenkins', 'Ansible'], ans: 1 },
+        { q: 'What does "shift left" mean in DevOps?', opts: ['Moving deployment to the left side of the pipeline', 'Testing and security earlier in the development process', 'Reducing team size', 'Moving to left-side data centers'], ans: 1 },
+        { q: 'What is the main benefit of Continuous Deployment?', opts: ['Manual control of releases', 'Slower but safer releases', 'Automatic deployment of every passing build to production', 'Deploying only quarterly'], ans: 2 }
+      ]
+    };
+
+    // Fallback quiz for custom programs
+    const DEFAULT_QUIZ = [
+      { q: 'What is the primary goal of this training program?', opts: ['To entertain employees', 'To improve job-relevant skills and knowledge', 'To fulfill administrative requirements only', 'To test existing knowledge'], ans: 1 },
+      { q: 'Which approach is best when learning new technical concepts?', opts: ['Skip theory, only practice', 'Theory only, no practice', 'Combine theory with hands-on practice', 'Memorize without understanding'], ans: 2 },
+      { q: 'What should you do when you encounter a problem you cannot solve?', opts: ['Give up immediately', 'Research, ask colleagues, consult documentation', 'Ignore the problem', 'Always solve it alone'], ans: 1 },
+      { q: 'Why is documentation important in technical work?', opts: ['It is not important', 'It helps others understand and maintain your work', 'It is only for beginners', 'It slows down development'], ans: 1 },
+      { q: 'What is the best practice for writing clean, maintainable code?', opts: ['Write complex, clever code', 'Use clear names, comments, and follow standards', 'Avoid using comments', 'Minimize the number of lines'], ans: 1 },
+      { q: 'Which principle states that software components should be open for extension but closed for modification?', opts: ['Single Responsibility', 'Open/Closed Principle', 'DRY Principle', 'KISS Principle'], ans: 1 },
+      { q: 'What does version control help teams do?', opts: ['Run code faster', 'Track changes, collaborate, and revert mistakes', 'Deploy applications automatically', 'Test code automatically'], ans: 1 },
+      { q: 'What is the purpose of code reviews in a development team?', opts: ['To criticize team members', 'To improve code quality and share knowledge', 'To slow down development', 'To replace testing'], ans: 1 },
+      { q: 'What does "agile development" primarily focus on?', opts: ['Detailed upfront planning', 'Iterative development and responding to change', 'Strict deadlines only', 'Individual work over collaboration'], ans: 1 },
+      { q: 'Why is security important in software development?', opts: ['It is not important', 'To prevent unauthorized access and protect user data', 'Only for large companies', 'Only for web applications'], ans: 1 }
+    ];
+
+    function getQuizForProgram(title) {
+      return QUIZ_DATA[title] || DEFAULT_QUIZ;
+    }
+
+    function getContentForProgram(title) {
+      return COURSE_CONTENT[title] || null;
+    }
+
+    function spill(s) {
+      const m = { enrolled: 'spill-enrolled', 'in-progress': 'spill-in-progress', completed: 'spill-completed' };
+      const l = { enrolled: 'Enrolled', 'in-progress': 'In Progress', completed: 'Completed', cancelled: 'Cancelled' };
+      return `<span class="spill ${m[s] || ''}">${l[s] || s}</span>`;
+    }
+
+    function renderCourses() {
+      const c = document.getElementById('courses-list');
+      if (!allEnrollments.length) {
+        c.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><h6>No courses assigned yet</h6><p>Your admin will assign courses soon.</p></div>`;
+        ['stat-total', 'stat-inprogress', 'stat-completed', 'stat-certs'].forEach(id => document.getElementById(id).textContent = 0);
+        return;
+      }
+      const done = allEnrollments.filter(e => e.status === 'completed');
+      document.getElementById('stat-total').textContent = allEnrollments.length;
+      document.getElementById('stat-inprogress').textContent = allEnrollments.filter(e => e.status === 'in-progress').length;
+      document.getElementById('stat-completed').textContent = done.length;
+      document.getElementById('stat-certs').textContent = done.length;
+
+      c.innerHTML = allEnrollments.map(e => {
+        const prog = e.progress || 0;
+        const isCompleted = e.status === 'completed';
+        const isInProgress = e.status === 'in-progress';
+        const isEnrolled = e.status === 'enrolled';
+        return `
+          <div class="course-card status-${e.status}">
+            <div class="course-hdr">
+              <div class="course-title">${e.program?.title || '—'}</div>
+              ${spill(e.status)}
+            </div>
+            <div class="course-meta">
+              <div class="meta-i">👨‍🏫 ${e.program?.trainer || '—'}</div>
+              <div class="meta-i">⏱ ${e.program?.duration || '—'}</div>
+              <div class="meta-i">📋 ${e.program?.type || '—'}</div>
+            </div>
+            <div class="prog-wrap">
+              <div class="prog-top"><span>Progress</span><strong>${prog}%</strong></div>
+              <div class="prog-bg"><div class="prog-fill" style="width:${prog}%"></div></div>
+            </div>
+            <div class="actions">
+              ${isEnrolled ? `<button class="btn-start" onclick="startCourse('${e._id}')">▶ Start Course</button>` : ''}
+              ${isInProgress ? `<button class="btn-study" onclick="openDoc('${e._id}','${e.program?.title}')">📖 Read Material & Complete</button>` : ''}
+              ${isInProgress ? `<button class="btn-quiz" onclick="openQuiz('${e._id}','${e.program?.title}')">📝 Take Quiz</button>` : ''}
+              ${isCompleted ? `<div class="completed-tag"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Course Completed — Certificate Earned!</div>` : ''}
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function loadMyCourses() {
+      const res = await fetch('/api/enrollments/my-enrollments', { headers: { 'Authorization': 'Bearer ' + token } });
+      allEnrollments = await res.json();
+      if (!Array.isArray(allEnrollments)) allEnrollments = [];
+      renderCourses();
+    }
+
+    async function startCourse(id) {
+      await fetch('/api/enrollments/' + id, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ status: 'in-progress', progress: 20 })
+      });
+      await loadMyCourses();
+    }
+
+    // ── DOCUMENTATION MODAL ──
+    function openDoc(enrollmentId, title) {
+      currentEnrollmentId = enrollmentId;
+      currentProgramTitle = title;
+      document.getElementById('doc-modal-title').textContent = '📖 ' + title;
+      const content = getContentForProgram(title);
+      let html = '';
+      if (content) {
+        html = `
+          <div class="doc-hero">
+            <div class="doc-tag">Course Documentation</div>
+            <h3>${title}</h3>
+            <p>${content.intro}</p>
+          </div>`;
+        content.sections.forEach(sec => {
+          html += `<div class="doc-section"><h4>${sec.title}</h4><p>${sec.content}</p></div><hr class="doc-divider">`;
+        });
+        html += `<div class="doc-section"><h4>Best Practices</h4><ul class="doc-list">${content.practices.map(p => `<li>${p}</li>`).join('')}</ul></div>`;
+      } else {
+        html = `<div class="doc-hero"><div class="doc-tag">Course Documentation</div><h3>${title}</h3><p>This course covers essential concepts and practical skills related to ${title}. Read through all sections carefully before proceeding to the assessment.</p></div>
+          <div class="doc-section"><h4>Core Concepts</h4><p>This training program introduces you to the fundamental concepts, tools, and best practices in ${title}. You will learn both theoretical foundations and practical applications used in real-world scenarios.</p></div>
+          <div class="doc-section"><h4>Learning Objectives</h4><ul class="doc-list"><li>Understand the core principles of ${title}</li><li>Apply knowledge to practical scenarios</li><li>Follow industry best practices</li><li>Demonstrate competency through assessment</li></ul></div>`;
+      }
+      html += `
+        <hr class="doc-divider">
+        <div class="read-confirm">
+          <p>✅ I have read and understood all the course material above. I am ready to proceed.</p>
+          <button class="btn-confirm-read" onclick="markAsRead()">I Have Read This — Mark as Complete & Take Quiz →</button>
+        </div>`;
+      document.getElementById('doc-modal-body').innerHTML = html;
+      document.getElementById('doc-modal').classList.add('show');
+    }
+
+    async function markAsRead() {
+      await fetch('/api/enrollments/' + currentEnrollmentId, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify({ status: 'in-progress', progress: 70 })
+      });
+      closeModal('doc-modal');
+      await loadMyCourses();
+      openQuiz(currentEnrollmentId, currentProgramTitle);
+    }
+
+    // ── QUIZ MODAL ──
+    function openQuiz(enrollmentId, title) {
+      currentEnrollmentId = enrollmentId;
+      currentProgramTitle = title;
+      quizQuestions = getQuizForProgram(title);
+      currentQ = 0; score = 0; answered = false;
+      document.getElementById('quiz-modal-title').textContent = '📝 ' + title + ' — Quiz';
+      document.getElementById('quiz-modal').classList.add('show');
+      renderQ();
+    }
+
+    function renderQ() {
+      const q = quizQuestions[currentQ];
+      const prog = (currentQ / quizQuestions.length) * 100;
+      answered = false;
+      document.getElementById('quiz-modal-body').innerHTML = `
+        <div class="quiz-prog">
+          <div class="quiz-prog-bg"><div class="quiz-prog-fill" style="width:${prog}%"></div></div>
+          <div class="quiz-prog-txt">Q${currentQ + 1} / ${quizQuestions.length}</div>
+        </div>
+        <div class="q-text">Q${currentQ + 1}. ${q.q}</div>
+        <div class="opts">
+          ${q.opts.map((opt, i) => `<button class="opt-btn" id="opt-${i}" onclick="selectOpt(${i})">${opt}</button>`).join('')}
+        </div>
+        <button class="btn-next" id="btn-next" disabled onclick="nextQ()">
+          ${currentQ === quizQuestions.length - 1 ? 'Submit Quiz →' : 'Next Question →'}
+        </button>`;
+    }
+
+    function selectOpt(idx) {
+      if (answered) return;
+      answered = true;
+      const correct = quizQuestions[currentQ].ans;
+      document.querySelectorAll('.opt-btn').forEach(b => b.disabled = true);
+      document.getElementById('opt-' + correct).classList.add('correct');
+      if (idx !== correct) document.getElementById('opt-' + idx).classList.add('wrong');
+      else score++;
+      document.getElementById('btn-next').disabled = false;
+    }
+
+    function nextQ() {
+      currentQ++;
+      if (currentQ < quizQuestions.length) { renderQ(); }
+      else { showResult(); }
+    }
+
+    async function showResult() {
+      const pct = Math.round((score / quizQuestions.length) * 100);
+      const passed = pct >= 60;
+      if (passed) {
+        await fetch('/api/enrollments/' + currentEnrollmentId, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ status: 'completed', progress: 100 })
+        });
+      }
+      document.getElementById('quiz-modal-body').innerHTML = `
+        <div class="result-box">
+          <div class="result-icon" style="background:${passed ? 'linear-gradient(135deg,#00b09b,#00d4aa)' : 'linear-gradient(135deg,#e24b4a,#a32d2d)'}">
+            <svg viewBox="0 0 24 24">${passed ? '<polyline points="20 6 9 17 4 12"/>' : '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'}</svg>
+          </div>
+          <div class="result-score" style="color:${passed ? '#00b09b' : '#e24b4a'}">${pct}%</div>
+          <div class="result-title">${passed ? '🎉 Congratulations! You Passed!' : '😔 Not Quite There Yet'}</div>
+          <div class="result-msg">
+            ${passed
+          ? `You scored ${score} out of ${quizQuestions.length} questions correctly.<br>Your course is now <strong>complete</strong> and your certificate is ready!`
+          : `You scored ${score} out of ${quizQuestions.length}. You need at least 60% to pass.<br>Please review the material and try again.`}
+          </div>
+          <div>
+            ${passed
+          ? `<button class="btn-cert" onclick="closeModal('quiz-modal');loadMyCourses()">✓ View My Courses</button>`
+          : `<button class="btn-retry2" onclick="openQuiz('${currentEnrollmentId}','${currentProgramTitle}')">↩ Retry Quiz</button>
+                 <button class="btn-study" style="margin-left:10px;padding:12px 20px;border-radius:12px;border:none;font-family:Poppins,sans-serif;font-size:13px;font-weight:700;cursor:pointer" onclick="closeModal('quiz-modal');openDoc('${currentEnrollmentId}','${currentProgramTitle}')">📖 Re-read Material</button>`}
+          </div>
+        </div>`;
+      if (passed) await loadMyCourses();
+    }
+
+    function renderCerts() {
+      const done = allEnrollments.filter(e => e.status === 'completed');
+      const c = document.getElementById('cert-list');
+      if (!done.length) {
+        c.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg><h6>No certificates yet</h6><p>Complete a course quiz (60%+) to earn certificates.</p></div>`;
+        return;
+      }
+      c.innerHTML = done.map(e => `
+        <div class="cert-card">
+          <div class="cert-hdr">
+            <div class="cert-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
+            <div>
+              <div class="cert-title">${e.program?.title || '—'}</div>
+              <div class="cert-date">Completed on ${e.completedDate ? new Date(e.completedDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A'}</div>
+            </div>
+          </div>
+          <div class="cert-meta">Trainer: <strong>${e.program?.trainer || '—'}</strong> &nbsp;|&nbsp; Duration: <strong>${e.program?.duration || '—'}</strong></div>
+          <button class="btn-dl" onclick="printCert('${e.program?.title}','${user.name}','${e.completedDate}','${e.program?.trainer}','${e.program?.duration}')">⬇ Download Certificate</button>
+        </div>`).join('');
+    }
+
+    function printCert(title, name, date, trainer, duration) {
+      const d = date ? new Date(date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : new Date().toLocaleDateString();
+      const win = window.open('', '_blank');
+      win.document.write(`<html><head><style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:'Poppins',sans-serif;background:#f0f4f8;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:40px}
+        .cert{background:white;border:3px solid #00b09b;border-radius:20px;padding:56px 72px;text-align:center;max-width:720px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.1)}
+        .logo{font-size:11px;color:#aaa;letter-spacing:3px;text-transform:uppercase;margin-bottom:24px}
+        h1{font-size:30px;color:#00b09b;font-weight:800;margin-bottom:6px}
+        .line{border:none;border-top:2px solid #e3f7f5;margin:22px auto;width:160px}
+        .pres{font-size:13px;color:#999;margin-bottom:8px}
+        .name{font-size:30px;color:#0a1628;font-weight:800;margin:8px 0}
+        .for{font-size:13px;color:#999;margin-bottom:8px}
+        .course{font-size:19px;color:#00b09b;font-weight:700;margin-bottom:20px}
+        .details{font-size:12px;color:#aaa;margin-bottom:6px}
+        .date{font-size:13px;color:#555;margin-top:16px}
+        .footer{margin-top:24px;font-size:10px;color:#ccc;letter-spacing:2px;text-transform:uppercase}
+        .badge{display:inline-block;background:#e3f7f5;color:#00b09b;border-radius:20px;padding:5px 16px;font-size:12px;font-weight:700;margin-top:16px}
+      </style></head><body>
+        <div class="cert">
+          <div class="logo">PTM System — Personnel Training Management</div>
+          <h1>Certificate of Completion</h1>
+          <div class="line"></div>
+          <p class="pres">This is to certify that</p>
+          <p class="name">${name}</p>
+          <p class="for">has successfully completed the course</p>
+          <p class="course">${title}</p>
+          <p class="details">Trainer: ${trainer} &nbsp;|&nbsp; Duration: ${duration}</p>
+          <p class="date">Completed on: ${d}</p>
+          <div class="badge">✓ Assessment Passed</div>
+          <div class="line"></div>
+          <p class="footer">Issued by PTM System &nbsp;•&nbsp; Personnel Training Management</p>
+        </div>
+      </body></html>`);
+      win.document.close();
+      setTimeout(() => win.print(), 600);
+    }
+
+    function renderNotifs() {
+      const c = document.getElementById('notif-list');
+      if (!allEnrollments.length) {
+        c.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><h6>No notifications yet</h6><p>Activity will appear here.</p></div>`;
+        return;
+      }
+      c.innerHTML = allEnrollments.map(e => {
+        let color, title, desc, time;
+        if (e.status === 'completed') { color = '#00b09b'; title = 'Course Completed!'; desc = `You passed the quiz for "${e.program?.title}" — Certificate ready!`; time = e.completedDate ? new Date(e.completedDate).toLocaleDateString() : ''; }
+        else if (e.status === 'in-progress') { color = '#f7971e'; title = 'Course In Progress'; desc = `Read material & take quiz for "${e.program?.title}"`; time = 'Currently active'; }
+        else { color = '#1a73e8'; title = 'New Course Assigned!'; desc = `Admin assigned "${e.program?.title}" — Click Start when ready`; time = e.enrolledDate ? new Date(e.enrolledDate).toLocaleDateString() : ''; }
+        return `<div class="notif-card" style="border-left:3px solid ${color}">
+          <div class="notif-dot" style="background:${color}">
+            <svg viewBox="0 0 24 24" style="stroke:white"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </div>
+          <div>
+            <div class="notif-title">${title}</div>
+            <div class="notif-desc">${desc}</div>
+            <div class="notif-time">${time}</div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function renderProfile() {
+      document.getElementById('p-ava').textContent = user.name.charAt(0).toUpperCase();
+      document.getElementById('p-name').textContent = user.name;
+      document.getElementById('p-email').textContent = user.email || '—';
+      document.getElementById('p-total').textContent = allEnrollments.length;
+      const done = allEnrollments.filter(e => e.status === 'completed').length;
+      document.getElementById('p-done').textContent = done;
+      document.getElementById('p-certs').textContent = done;
+    }
+
+    function updateCharCount() {
+      const fbText = document.getElementById('fb-text');
+      document.getElementById('fb-count').textContent = fbText.value.length;
+    }
+
+    function renderFeedbackOptions() {
+      const select = document.getElementById('fb-course');
+      const courses = allEnrollments.map(e => e.program?.title).filter(Boolean);
+      select.innerHTML = '<option value="">-- Choose a course --</option>';
+
+      if (courses.length > 0) {
+        // Unique assigned courses
+        [...new Set(courses)].forEach(c => {
+          select.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+      } else {
+        // Fallback sample courses if none assigned
+        ['Web Development Fundamentals', 'React.js Complete Guide', 'Node.js & Express Backend'].forEach(c => {
+          select.innerHTML += `<option value="${c}">${c}</option>`;
+        });
+      }
+    }
+
+    function submitFeedback() {
+      const course = document.getElementById('fb-course').value;
+      const type = document.getElementById('fb-type').value;
+      const text = document.getElementById('fb-text').value.trim();
+      const improve = document.getElementById('fb-improve').value.trim();
+      const rec = document.querySelector('input[name="fb_rec"]:checked')?.value;
+      const ovStar = document.querySelector('input[name="rate_ov"]:checked')?.value;
+      const ccStar = document.querySelector('input[name="rate_cc"]:checked')?.value;
+      const tqStar = document.querySelector('input[name="rate_tq"]:checked')?.value;
+      const peStar = document.querySelector('input[name="rate_pe"]:checked')?.value;
+
+      if (!course || !type || !text || !ovStar || !ccStar || !tqStar || !peStar) {
+        alert('Please fill in all mandatory fields and ratings.');
+        return;
+      }
+
+      const newFb = { empName: user.name, email: user.email || '', course, type, text, improve, recommend: rec, stars: parseInt(ovStar) };
+      
+      fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        body: JSON.stringify(newFb)
+      }).then(res => {
+        if(res.ok) {
+           renderFeedbackHistory();
+        }
+      });
+
+      // Reset form
+      document.getElementById('fb-course').value = '';
+      document.getElementById('fb-text').value = '';
+      document.getElementById('fb-improve').value = '';
+      document.querySelectorAll('.star-rating input').forEach(inp => inp.checked = false);
+      updateCharCount();
+
+      // Show success
+      const msg = document.getElementById('fb-success-msg');
+      msg.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" style="stroke:#fff;fill:none;stroke-width:2;vertical-align:middle;margin-right:8px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg> Feedback saved securely to MongoDB Database!';
+      msg.style.display = 'block';
+      msg.style.background = 'linear-gradient(135deg, #00b09b, #00d4aa)';
+      setTimeout(() => msg.style.display = 'none', 5000);
+
+      renderFeedbackHistory();
+    }
+
+    async function renderFeedbackHistory() {
+      const res = await fetch('/api/feedback', { headers: { 'Authorization': 'Bearer ' + token } });
+      let history = await res.json();
+      if (!Array.isArray(history)) history = [];
+      history = history.filter(fb => fb.empName === user.name);
+      
+      const container = document.getElementById('fb-history-list');
+      if (history.length === 0) {
+        container.innerHTML = `<div class="empty-state"><p>No feedback submitted yet. Your voice helps us improve!</p></div>`;
+        return;
+      }
+
+      container.innerHTML = history.map(fb => `
+        <div class="fb-history-card">
+          <div class="fb-h-hdr">
+            <div class="fb-h-course">${fb.course}</div>
+            <div class="fb-h-date">${new Date(fb.date).toLocaleDateString()}</div>
+          </div>
+          <div><span class="fb-h-type">${fb.type}</span></div>
+          <div class="fb-h-stars">${'★'.repeat(fb.stars)}${'☆'.repeat(5 - fb.stars)} (${fb.stars}/5)</div>
+          <div class="fb-h-text">"${fb.text}"</div>
+          ${fb.improve ? `<div class="fb-h-text" style="color:#777;font-size:11px">Suggestion: ${fb.improve}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    loadMyCourses();
+    renderFeedbackHistory();
+  </script>
+</body>
+
+</html>

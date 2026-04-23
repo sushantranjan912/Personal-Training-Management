@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Feedback Management — PTM System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f0f4f8;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+      background: linear-gradient(180deg, #0a1628 0%, #0d2137 60%, #0a2540 100%);
+      display: flex;
+      flex-direction: column;
+      z-index: 100;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .sidebar-logo {
+      padding: 28px 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .logo-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .logo-text {
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .logo-text span {
+      color: #00d4aa;
+    }
+
+    .logo-sub {
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 10px;
+      display: block;
+      font-weight: 400;
+    }
+
+    .sidebar-menu {
+      padding: 24px 12px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .menu-label {
+      font-size: 10px;
+      color: rgba(255, 255, 255, 0.25);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0 12px;
+      margin-bottom: 8px;
+      margin-top: 20px;
+      font-weight: 600;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: rgba(255, 255, 255, 0.55);
+      font-size: 13.5px;
+      text-decoration: none;
+      transition: all 0.2s;
+      margin-bottom: 2px;
+      font-weight: 500;
+    }
+
+    .menu-item:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: white;
+    }
+
+    .menu-item.active {
+      background: linear-gradient(135deg, rgba(0, 176, 155, 0.25), rgba(0, 212, 170, 0.1));
+      color: #00d4aa;
+      border: 1px solid rgba(0, 212, 170, 0.2);
+    }
+
+    .menu-item svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 16px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-ava {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #00b09b, #00d4aa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .user-info {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .user-name {
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .user-role {
+      color: rgba(255, 255, 255, 0.35);
+      font-size: 11px;
+    }
+
+    .logout-btn {
+      background: none;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 107, 107, 0.15);
+    }
+
+    .logout-btn svg {
+      width: 16px;
+      height: 16px;
+      stroke: rgba(255, 255, 255, 0.35);
+      fill: none;
+      stroke-width: 1.8;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.2s;
+    }
+
+    .logout-btn:hover svg {
+      stroke: #ff6b6b;
+    }
+
+    .main {
+      margin-left: 250px;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: white;
+      padding: 18px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #e8edf2;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .topbar-left h5 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0a1628;
+      margin: 0;
+    }
+
+    .topbar-left p {
+      font-size: 12px;
+      color: #aaa;
+      margin: 0;
+    }
+
+    .date-chip {
+      background: linear-gradient(135deg, rgba(0, 176, 155, 0.1), rgba(0, 212, 170, 0.05));
+      border: 1px solid rgba(0, 176, 155, 0.2);
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 12px;
+      color: #00b09b;
+      font-weight: 500;
+    }
+
+    .content {
+      padding: 32px 36px;
+    }
+
+    /* Filter & Search Bar */
+    .controls-bar {
+      background: white;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      flex-wrap: wrap;
+    }
+
+    .ctrl-group {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .ctrl-group input,
+    .ctrl-group select {
+      width: 100%;
+      border: 1.5px solid #e8edf2;
+      border-radius: 12px;
+      padding: 10px 16px;
+      font-size: 13px;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.2s;
+      outline: none;
+    }
+
+    .ctrl-group input:focus,
+    .ctrl-group select:focus {
+      border-color: #00b09b;
+      box-shadow: 0 0 0 3px rgba(0, 176, 155, 0.1);
+    }
+
+    /* Stats Row */
+    .f-stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .f-stat-card {
+      background: linear-gradient(135deg, #0a1628, #0d2137);
+      color: white;
+      border-radius: 16px;
+      padding: 20px;
+      flex: 1;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .f-stat-card::after {
+      content: '';
+      position: absolute;
+      right: -20px;
+      top: -20px;
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+
+    .f-stat-val {
+      font-size: 28px;
+      font-weight: 800;
+      color: #00d4aa;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .f-stat-lbl {
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    /* Feedback Cards Grid */
+    .fb-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .fb-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      border: 1px solid #e8edf2;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .fb-card.high-rating {
+      border-left: 4px solid #00b09b;
+    }
+
+    .fb-card.low-rating {
+      border-left: 4px solid #ff6b6b;
+    }
+
+    .fb-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+
+    .fb-hdr {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .fb-emp-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0a1628;
+    }
+
+    .fb-emp-id {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    .fb-date {
+      font-size: 11px;
+      color: #888;
+      background: #f0f4f8;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+
+    .fb-course {
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #00b09b;
+      margin-bottom: 8px;
+    }
+
+    .fb-type {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .type-issue {
+      background: rgba(255, 107, 107, 0.15);
+      color: #ff6b6b;
+    }
+
+    .type-suggestion {
+      background: rgba(247, 151, 30, 0.15);
+      color: #f7971e;
+    }
+
+    .type-improvement {
+      background: rgba(26, 115, 232, 0.15);
+      color: #1a73e8;
+    }
+
+    .type-appreciation {
+      background: rgba(0, 176, 155, 0.15);
+      color: #00b09b;
+    }
+
+    .fb-ratings {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 14px;
+      background: #fafbfc;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #f0f4f8;
+    }
+
+    .fb-rate-item {
+      font-size: 11px;
+      color: #555;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .fb-stars {
+      color: #f7971e;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .fb-text-box {
+      font-size: 13px;
+      color: #444;
+      line-height: 1.6;
+      flex: 1;
+      margin-bottom: 12px;
+    }
+
+    .fb-text-short {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .fb-expand-btn {
+      background: none;
+      border: none;
+      color: #1a73e8;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 0;
+      cursor: pointer;
+      text-decoration: underline;
+      margin-bottom: 14px;
+      display: inline-block;
+    }
+
+    .fb-improve {
+      background: rgba(26, 115, 232, 0.05);
+      border-left: 2px solid #1a73e8;
+      padding: 10px 14px;
+      border-radius: 0 12px 12px 0;
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 16px;
+    }
+
+    .fb-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px dashed #e8edf2;
+    }
+
+    .fb-rec {
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .fb-rec.yes {
+      color: #00b09b;
+    }
+
+    .fb-rec.no {
+      color: #ff6b6b;
+    }
+
+    .fb-action {
+      background: rgba(0, 176, 155, 0.1);
+      color: #00b09b;
+      border: 1px solid rgba(0, 176, 155, 0.2);
+      padding: 6px 14px;
+      border-radius: 16px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .fb-action:hover {
+      background: #00b09b;
+      color: white;
+    }
+
+    .fb-action.reviewed {
+      background: #e8edf2;
+      color: #888;
+      border-color: #ddd;
+      cursor: default;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #888;
+      font-size: 14px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .empty-state svg {
+      width: 48px;
+      height: 48px;
+      stroke: #ccc;
+      fill: none;
+      stroke-width: 1.5;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon"><svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5z" />
+          <path d="M2 17l10 5 10-5" />
+          <path d="M2 12l10 5 10-5" />
+        </svg></div>
+      <div class="logo-text">PTM<span>System</span><span class="logo-sub">Training Management</span></div>
+    </div>
+    <div class="sidebar-menu">
+      <div class="menu-label">Main Menu</div>
+      <a href="dashboard.html" class="menu-item"><svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7" />
+          <rect x="14" y="3" width="7" height="7" />
+          <rect x="14" y="14" width="7" height="7" />
+          <rect x="3" y="14" width="7" height="7" />
+        </svg>Dashboard</a>
+      <a href="employees.html" class="menu-item"><svg viewBox="0 0 24 24">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+          <circle cx="9" cy="7" r="4" />
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+          <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+        </svg>Employees</a>
+      <a href="programs.html" class="menu-item"><svg viewBox="0 0 24 24">
+          <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+          <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+        </svg>Training Programs</a>
+      <a href="enrollments.html" class="menu-item"><svg viewBox="0 0 24 24">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+        </svg>Enrollments</a>
+      <a href="reports.html" class="menu-item"><svg viewBox="0 0 24 24">
+          <line x1="18" y1="20" x2="18" y2="10" />
+          <line x1="12" y1="20" x2="12" y2="4" />
+          <line x1="6" y1="20" x2="6" y2="14" />
+        </svg>Reports</a>
+      <a href="feedback.html" class="menu-item active"><svg viewBox="0 0 24 24">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+        </svg>Feedback Mgmt</a>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="user-ava" id="user-avatar">A</div>
+        <div class="user-info">
+          <div class="user-name" id="user-name">Admin</div>
+          <div class="user-role" id="user-role">Administrator</div>
+        </div>
+        <button class="logout-btn" onclick="logout()"><svg viewBox="0 0 24 24">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+            <polyline points="16 17 21 12 16 7" />
+            <line x1="21" y1="12" x2="9" y2="12" />
+          </svg></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h5>Feedback Management</h5>
+        <p>View and analyze employee feedback</p>
+      </div>
+      <div class="date-chip" id="current-date"></div>
+    </div>
+    <div class="content">
+
+      <div class="f-stats">
+        <div class="f-stat-card">
+          <div class="f-stat-val" id="stat-total">0</div>
+          <div class="f-stat-lbl">Total Submissions</div>
+        </div>
+        <div class="f-stat-card">
+          <div class="f-stat-val" id="stat-avg">0.0<span style="font-size:16px;color:#f7971e">★</span></div>
+          <div class="f-stat-lbl">Average Organization Rating</div>
+        </div>
+        <div class="f-stat-card">
+          <div class="f-stat-val" id="stat-issues">0</div>
+          <div class="f-stat-lbl">Reported Issues</div>
+        </div>
+      </div>
+
+
+
+      <div id="fb-grid" class="fb-grid">
+        <!-- Rendered via JS -->
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const user = JSON.parse(localStorage.getItem('user'));
+    const token = localStorage.getItem('token');
+    if (!token || !user) { window.location.href = 'index.html'; }
+    document.getElementById('user-name').textContent = user.name;
+    document.getElementById('user-avatar').textContent = user.name.charAt(0).toUpperCase();
+    document.getElementById('user-role').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+    document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    function logout() { localStorage.removeItem('user'); localStorage.removeItem('token'); window.location.href = 'index.html'; }
+
+    let allFeedback = [];
+
+    async function fetchAllFeedback() {
+      // Pull directly from the backend globally
+      const res = await fetch('/api/feedback', { headers: { 'Authorization': 'Bearer ' + token } });
+      allFeedback = await res.json();
+      if (!Array.isArray(allFeedback)) allFeedback = [];
+
+      calculateStats();
+      renderFeedback(allFeedback);
+    }
+
+    function calculateStats() {
+      document.getElementById('stat-total').textContent = allFeedback.length;
+
+      let issueCount = allFeedback.filter(f => f.type === 'Issue').length;
+      document.getElementById('stat-issues').textContent = issueCount;
+
+      if (allFeedback.length > 0) {
+        let avg = allFeedback.reduce((acc, f) => acc + (f.stars || 0), 0) / allFeedback.length;
+        document.getElementById('stat-avg').innerHTML = `${avg.toFixed(1)}<span style="font-size:16px;color:#f7971e">★</span>`;
+      }
+    }
+
+    function toggleExpand(id) {
+      const el = document.getElementById('fb-text-' + id);
+      const btn = document.getElementById('fb-btn-' + id);
+      if (el.classList.contains('fb-text-short')) {
+        el.classList.remove('fb-text-short');
+        btn.textContent = 'Show Less';
+      } else {
+        el.classList.add('fb-text-short');
+        btn.textContent = 'Read More';
+      }
+    }
+
+    function markReviewed(btn) {
+      btn.classList.add('reviewed');
+      btn.textContent = 'Reviewed';
+    }
+
+
+
+    function renderFeedback(feedbackList) {
+      const container = document.getElementById('fb-grid');
+
+      if (feedbackList.length === 0) {
+        container.innerHTML = `<div class="empty-state" style="grid-column: 1 / -1;"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><div>No feedback records found.</div></div>`;
+        return;
+      }
+
+      container.innerHTML = feedbackList.map(fb => {
+        let ratingClass = '';
+        if (fb.stars >= 4) ratingClass = 'high-rating';
+        if (fb.stars <= 2) ratingClass = 'low-rating';
+
+        let typeClass = 'type-suggestion';
+        if (fb.type === 'Issue') typeClass = 'type-issue';
+        if (fb.type === 'Improvement') typeClass = 'type-improvement';
+        if (fb.type === 'Appreciation') typeClass = 'type-appreciation';
+
+        let recHtml = fb.recommend === 'No' ? `<span class="fb-rec no">👎 Not Recommended</span>` : `<span class="fb-rec yes">👍 Recommended</span>`;
+
+        return `
+           <div class="fb-card ${ratingClass}">
+             <div class="fb-hdr">
+               <div>
+                 <div class="fb-emp-name">${fb.empName}</div>
+                 <div class="fb-emp-id">Employee Submission</div>
+               </div>
+               <div class="fb-date">${new Date(fb.date).toLocaleDateString()}</div>
+             </div>
+             
+             <div class="fb-course">${fb.course}</div>
+             <div><span class="fb-type ${typeClass}">${fb.type}</span></div>
+             
+             <div class="fb-ratings">
+               <div class="fb-rate-item"><span>Overall:</span> <span class="fb-stars">${'★'.repeat(fb.stars || 0)} ${fb.stars}/5</span></div>
+             </div>
+             
+             <div class="fb-text-box fb-text-short" id="fb-text-${fb._id}">"${fb.text}"</div>
+             <button class="fb-expand-btn" id="fb-btn-${fb._id}" onclick="toggleExpand('${fb._id}')">Read More</button>
+             
+             ${fb.improve ? `<div class="fb-improve"><strong>Suggestion:</strong> ${fb.improve}</div>` : ''}
+             
+             <div class="fb-footer">
+               ${recHtml}
+               <button class="fb-action" onclick="markReviewed(this)">Mark Reviewed</button>
+             </div>
+           </div>
+         `;
+      }).join('');
+    }
+
+    fetchAllFeedback();
+  </script>
+</body>
+
+</html>
